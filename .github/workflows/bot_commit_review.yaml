@@ -1,0 +1,69 @@
+name: "Commit Log Review Bot"
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install requests pyyaml
+
+      # Step 1: Extract PR commit log → commit_log.txt
+      - name: Extract input
+        id: extract
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: python .github/workflows/scripts/robot/extract_input.py --output commit_log.txt
+
+      # Step 2: Load the Conventional Commits spec → template.txt
+      - name: Prepare template
+        id: template
+        if: success()
+        run: python .github/workflows/scripts/robot/prepare_template.py --output template.txt
+
+      # Step 3: Load the system prompt → system_prompt.txt
+      - name: Prepare system prompt
+        id: sysprompt
+        if: success()
+        run: python .github/workflows/scripts/robot/prepare_system_prompt.py --output system_prompt.txt
+
+      # Step 4: Call LLM with assembled prompt → review_output.md
+      - name: Call LLM
+        id: llm
+        if: success()
+        env:
+          VLLM_BASE_URL: ${{ secrets.VLLM_BASE_URL }}
+          VLLM_API_KEY: ${{ secrets.VLLM_API_KEY }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          python .github/workflows/scripts/robot/call_llm.py \
+            --system-prompt system_prompt.txt \
+            --template template.txt \
+            --commit-log commit_log.txt \
+            --output review_output.md
+
+      # Step 5: Post the review as a PR comment
+      - name: Post handler
+        id: post
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: python .github/workflows/scripts/robot/handle_review.py --input review_output.md
