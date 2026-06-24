@@ -1,0 +1,101 @@
+name: "PR Review Bot"
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited]
+
+concurrency:
+  group: pr-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.state == 'open'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install requests pyyaml
+
+      # Step 1: Extract PR info → pr_info.json
+      - name: Extract PR info
+        id: extract
+        run: python .github/workflows/scripts/robot/extract_pr_info.py --output pr_info.json
+
+      # Step 2: Load the PR template → template.txt
+      - name: Prepare template
+        id: template
+        if: success()
+        run: python .github/workflows/scripts/robot/prepare_template.py --input pr_info.json --output template.txt
+
+      # Step 3: Prepare description system prompt → desc_system_prompt.txt
+      - name: Prepare system prompt
+        id: sysprompt
+        if: success()
+        run: python .github/workflows/scripts/robot/prepare_system_prompt.py --variant pr --output desc_system_prompt.txt
+
+      # Step 4: Call LLM for PR description check → description_result.json
+      - name: Call LLM for description
+        id: llm_desc
+        if: |
+          success() &&
+          (
+            github.event.action == 'opened' ||
+            github.event.action == 'reopened' ||
+            (github.event.action == 'edited' && (github.event.changes.title || github.event.changes.body)) ||
+            (github.event.action == 'synchronize' && github.event.changes.body)
+          )
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          VLLM_API_KEY: ${{ secrets.VLLM_API_KEY }}
+          VLLM_BASE_URL: ${{ secrets.VLLM_BASE_URL }}
+          ISSUE_TITLE: ${{ github.event.pull_request.title }}
+          ISSUE_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          python .github/workflows/scripts/robot/call_llm.py \
+            --system-prompt desc_system_prompt.txt \
+            --template template.txt \
+            --type-key issue_type.txt \
+            --kind pr \
+            --output description_result.json
+
+      # If description check was skipped, create a placeholder
+      - name: Skip description check
+        id: skip_desc
+        if: success() && steps.llm_desc.outcome == 'skipped'
+        run: |
+          echo '{"ok": true, "score": 100, "executed": false}' > description_result.json
+
+      # Step 5: Post comment + write label actions → label_actions.json
+      - name: Post handler
+        id: post
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          NEED_DETAIL_LABEL: ${{ vars.PR_DESC_CHECK_NEED_DETAIL_LABEL || 'need-detail-desc' }}
+        run: |
+          python .github/workflows/scripts/robot/handle_review.py \
+            --input description_result.json \
+            --label-output label_actions.json
+
+      # Step 6: Manage labels (add/remove need-detail-desc)
+      - name: Manage labels
+        id: label
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: python .github/workflows/scripts/robot/manage_labels.py

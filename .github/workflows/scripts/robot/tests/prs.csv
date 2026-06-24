@@ -1,0 +1,2619 @@
+pr_number,title,prefix,state,labels,created_at,body,deepseek_v4_flash_output,expected_ok_dsv4,judge_raw_output,ok_reasonable,reasoning_valid,suggestions_valid,judge_reasoning
+757,[docs](fix) fix docs error,[docs],open,document,2026-06-24T03:22:08Z,"1. Added the third-party software tabulate to the image of version 3.2.1.
+2. Fixed the Dockerfile error and added the compilation of llvm and ta.
+3. Fixed the error in the 04_fused_attention_example.md file.
+4. Modified the architecture and document errors in the quick_start.md and installation_guide.md files.
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 78,
+    ""reasoning"": ""该 PR 描述明确列出了四点具体的文档修改内容（添加依赖、修复 Dockerfile 和文档错误等），信息直接且可理解，虽然未涉及测试验证步骤，但对于纯文档修改而言已基本满足 reviewer 理解变更的需求。模板复选框未勾选不影响内容的实质性，标题也点明了文档修复类型。"",
+    ""summary"": ""描述提供了具体的修改清单，关键信息完整，可支撑 reviewer 初步审查。"",
+    ""missing_items"": [],
+    ""suggestions"": [
+        ""可补充每条修改的具体问题描述或修复前后的对比，让 reviewer 更快定位变更原因"",
+        ""对于文档修改，可说明是否已在本地渲染预览确认格式正确""
+    ]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的 ok 判断合理，reasoning 自洽，suggestions 有效且无强制表述，missing_items 为空符合实际，整体审核正确。""
+}",true,true,true,评审 Bot 的 ok 判断合理，reasoning 自洽，suggestions 有效且无强制表述，missing_items 为空符合实际，整体审核正确。
+754,[CI](fix) update default code owners,[CI],merged,release,2026-06-24T02:47:36Z,"## Related ISSUE
+https://github.com/triton-lang/triton-ascend/issues/667
+
+## Summary
+This PR updates the `.github/CODEOWNERS` default rule (`*`), replacing the inactive owner `@HEX1A0A` with three active core developers: `@KanuaK`, `@WuTYSFG`, and `@hongziqi`.
+
+The `*` rule is the **repository-wide fallback**: it applies to any file that is not matched by a more specific rule later in the file (GitHub uses last-match precedence). Paths such as `third_party/ascend/` already have dedicated entries and are **not** affected by this change.
+
+Before:
+
+```diff
+-*       @HEX1A0A
+```
+
+After:
+
+```diff
++*       @KanuaK @WuTYSFG @hongziqi
+```
+
+## Why this change is needed
+
+1. **`@HEX1A0A` is no longer active on triton-ascend.** As the sole default owner, PRs touching uncovered paths (e.g. root-level configs, docs, CI files) could stall waiting for review from someone who is not available day-to-day.
+
+2. **Single point of failure on the catch-all rule.** One inactive person as the default owner creates a review bottleneck for any path without a dedicated CODEOWNERS entry.
+
+3. **Consistent with ascend maintainer ownership.** The same three maintainers already own `third_party/ascend/`. Using them as the default fallback keeps governance aligned and provides redundancy — any one of the three can review.
+
+## Scope of impact
+
+| Path type | Affected by this PR? | Reviewers after merge |
+|---|---|---|
+| Files with a more specific rule (e.g. `lib/Analysis/`, `third_party/ascend/`) | No — their dedicated owners still apply | Unchanged |
+| Files without a dedicated rule (e.g. root `README`, `.github/workflows/`, top-level docs) | **Yes** | `@KanuaK`, `@WuTYSFG`, `@hongziqi` |
+
+## User Impact
+
+No code change. This is a repository governance update only. PRs that modify paths **without** a more specific CODEOWNERS entry will now request review from three active maintainers instead of one inactive maintainer.
+
+## CheckList
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [x] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [x] This PR does not need a test because it only updates the CODEOWNERS governance file; no code or build behavior is affected.
+
+- Select one of the following.
+  - [x] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 95,
+    ""reasoning"": ""描述非常详细，涵盖了相关issue、变更原因、影响范围、用户影响以及完整的检查清单。标题虽然使用了[CI](fix)的非标准格式，但清晰表达了变更意图。信息完整性极高，维护者可以直接理解并开始审查。"",
+    ""summary"": ""描述提供了完整且清晰的变更说明，包括动机、具体修改、影响范围和无需测试的理由，完全满足合规要求。"",
+    ""missing_items"": [],
+    ""suggestions"": []
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的输出合理。描述信息非常完整，ok=true和评分95符合实际情况；缺失项列表为空准确，因为关键信息均已覆盖；无建议且不包含强制表述，与高质量描述匹配；推理逻辑自洽，与判断一致。""
+}",true,true,true,评审Bot的输出合理。描述信息非常完整，ok=true和评分95符合实际情况；缺失项列表为空准确，因为关键信息均已覆盖；无建议且不包含强制表述，与高质量描述匹配；推理逻辑自洽，与判断一致。
+752,[Libdevice](feat) Libdevice operators support the float16 data type,[Libdevice],open,release,2026-06-24T02:31:45Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""标题指明了变更类型和大致范围，但描述部分仅包含模板注释和未填写的复选框，没有任何实质性内容（如变更动机、具体实现、测试方法或相关issue）。维护者无法从当前描述中理解PR的具体意图和验证方式，信息严重不足。"",
+    ""summary"": ""描述仅包含模板占位符，无任何实质性说明，不足以支持审查。"",
+    ""missing_items"": [""缺失变更详细说明（动机、实现方式）"", ""缺失测试计划或验证方法""],
+    ""suggestions"": [""请在描述中补充变更的具体内容和实现思路"", ""说明测试覆盖情况或验证方式，如已添加的测试或不需要测试的理由""]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的判断正确：PR描述仅含模板和未填写的复选框，无任何实质性内容，ok=false合理；reasoning自洽地指出了信息严重不足；suggestions具体且无强制表述，能有效引导补充缺失信息；missing_items准确列出了实际缺失的关键项。""
+}",true,true,true,评审Bot的判断正确：PR描述仅含模板和未填写的复选框，无任何实质性内容，ok=false合理；reasoning自洽地指出了信息严重不足；suggestions具体且无强制表述，能有效引导补充缺失信息；missing_items准确列出了实际缺失的关键项。
+748,[ssbuffer](fix) fixpipe need to add when there are many users,[ssbuffer],merged,release,2026-06-23T14:44:54Z,"# Title: fixpipe need to add when there are many users
+
+## Summary:
+Fix an issue in patternMatchCUBE where downstream pattern matching incorrectly processed operations with multiple users. The fixpipe optimization should only apply when there is a single-user chain.
+
+## Changes:
+- Skip downstream pattern matching if the operation has multiple users (!op->hasOneUse())
+- Break out of the yield chain traversal if an intermediate operation has multiple users
+
+## Rationale:
+When an operation result has multiple users, following the downstream chain for pattern matching can lead to incorrect fixpipe insertion. This patch ensures we only traverse single-use chains during downstream analysis.
+
+# New contributor declaration
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [x] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [x] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [x] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [x] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+",,false,,,,,
+746,Remove data type restrictions for tl.gather,[Misc],open,"document,restricted-files",2026-06-23T14:08:38Z,"## 背景
+
+`python/triton/language/semantic.py:1773-1774` 对 `tl.gather` 的 `src` 参数加入了一条上游社区不存在的 dtype 检查：
+
+```python
+if not (src.dtype.is_floating() or src.dtype.is_int8()):
+    raise ValueError(...)
+```
+
+此检查在 fork commit `313dccecf`（2025-12）引入，当时编译器 pipeline 尚未完善，部分整数类型的 gather lowering 不支持。如今编译器已完整支持，该检查由""必要的保护""退化为""过时的限制""。
+
+## 当前现状
+
+该检查**放行**的类型：`float16/bf16/float32/float64/fp8*/int8`
+
+被**拦截**的类型：
+
+| 被拦截类型 | 后端实际能力 | 结论 |
+|-----------|-------------|------|
+| `i16, ui16, i32, ui32` | 硬件 VGatherOp 原生支持（`HIVMVectorOps.td:1547`，`Gather1D.cpp:107-118`） | 前端误拦 |
+| `i64, ui64` | `HFusionOps.cpp:2225` 的 `isInteger(64)` 强制走标量循环分解 | 前端误拦 |
+| `uint8, bool` | bool 经 `LegalizeBoolPass` → int8 → normalize → f16；uint8 同理 | 前端误拦 |
+
+**社区上游的行为**：对 `src` 不作任何 dtype 限制，所有 Triton 支持的标量类型均可传入 `tl.gather`。
+
+## 为什么可以删
+
+### 全链路验证
+
+被拦截的类型去掉检查后，经过的编译器链路**没有任何环节进行类型拦截**：
+
+```mermaid
+flowchart TD
+    A[""semantic.py:1771<br/>gather(src, idx, axis)<br/>❌ 无类型检查""]
+    --> B[""TritonOpConverter.cpp:1942<br/>GatherConverter<br/>→ func.call @triton_gather_N<br/>❌ 无类型检查""]
+    --> C[""AdaptTritonKernel.cpp:210<br/>elemTy = srcTy.getElementType()<br/>→ hfusion::GatherOp<br/>❌ 无类型检查""]
+    --> D{""Normalize.cpp:4239<br/>NormalizeToTargetType<br/>&lt;int8_t, GatherOp&gt;""}
+
+    D -->|""i16/ui16/i32/ui32<br/>i64/ui64/uint8/bool<br/>不匹配，跳过""| E{""HFusionOps.cpp:2225<br/>isInteger(64) ?""}
+
+    E -->|""i64 / ui64""| F[""强制走 decomposeOperation()<br/>→ scf.for 标量循环 ✅""]
+
+    E -->|""i16/ui16/i32/ui32<br/>uint8 / bool""| G{""gatherAxis == rank-1 ?""}
+
+    G -->|""✅ 末轴""| H[""HFusionToHIVM.cpp:649<br/>→ hivm::VGatherOp<br/>❌ 无类型检查""]
+    H --> I{""HIVMVectorOps.td:1547<br/>OperElemTypeConstraints<br/>[0] ∈ [I16,UI16,I32,UI32,<br/>F16,BF16,F32] ?""}
+    I -->|""✅ 全部在列表中""| J[""HIVMToStandard<br/>→ Gather1D.cpp<br/>→ NPU 硬件执行 ✅""]
+
+    G -->|""❌ 非末轴""| F
+
+```
+
+### 硬件指令级证据
+
+**末轴 gather（原支持类型 + i16/ui16/i32/ui32）→ VGatherOp 硬件原生**：
+
+```tablegen
+// HIVMVectorOps.td:1547 — VGatherOp 硬件指令类型约束
+def VGatherOp : HIVM_VectorOp<""vgather"", [
+    OperElemTypeConstraints<[0], [I16, UI16, I32, UI32, F16, BF16, F32]>,
+    //                         ↑   ↑    ↑    ↑
+    //                 被前端误拦的四种整数类型，硬件原生支持
+]>
+
+// Gather1D.cpp:107-118 — NPU 模板运行时注册，与 HIVM 完全对应
+REGISTE_GATHER(1, int16_t);
+REGISTE_GATHER(1, uint16_t);
+REGISTE_GATHER(1, int32_t);
+REGISTE_GATHER(1, uint32_t);
+```
+
+**非末轴 gather（任意类型）→ decomposeOperation 标量循环分解**：
+
+```cpp
+// HFusionOps.cpp:2224-2226 — 非末轴或 i64 走分解，分解后是纯标量 extract/insert
+if (gatherAxis == rank - 1 && !srcElmTy.isInteger(64))
+    return failure();  // failure = 不分解 → 走 VGatherOp 硬件
+// 不满足条件的（非末轴 / i64）→ 继续往下 → scf.for 循环 + tensor.extract + tensor.insert
+// 标量 extract/insert 不检查数据类型，任何 MLIR 合法类型均可
+```
+
+**i64/ui64（无论末轴与否）→ 强制走分解**：
+
+```cpp
+// HFusionOps.cpp:2225 — i64 显式排除在 VGatherOp 路径之外
+if (gatherAxis == rank - 1 && !srcElmTy.isInteger(64))
+//                               ^^^^^^^^^^^^^^^^^^^^
+//                          i64 不满足此条件 → 强制走 decomposeOperation
+```
+
+## 验证
+
+基于现有 `generalization_cases/test_general_gather.py`，扩展 dtype 参数化覆盖到全部被拦截类型：
+
+| src dtype | 测试 shape 数 | 结果 |
+|-----------|:---:|------|
+| `float32, float16, bfloat16` | 6 | ✅ 全通过（原本支持） |
+| `int8` | 6 | ✅ 全通过（原本支持，normalize→f16） |
+| **`int32, int16, int64`** | 6 | ✅ **全通过（新放行，含末轴/非末轴）** |
+| **`uint8, bool`** | 6 | ✅ **全通过（新放行，含末轴/非末轴）** |
+
+> 注：`[128,64]×[128,128]` 大 shape 场景因 UB 内存不足跳过，所有 dtype 表现一致，非本次修改引入。
+
+## 修改内容
+
+```diff
+-        if not (src.dtype.is_floating() or src.dtype.is_int8()):
+-            raise ValueError(f""Expected dtype fp16/fp32/bf16/f8E5M2/f8E4M3FN/int8, but got {src.dtype}"")
+-
+```
+
+仅删除两行，无其他改动。行为与上游社区一致：对所有 Triton 支持的标量类型放行。
+","{
+    ""ok"": true,
+    ""score"": 95,
+    ""reasoning"": ""该PR描述从背景、现状、删改原因、全链路验证、硬件指令级证据到测试结果进行了完整的阐述。核心修改仅删除两行检查，并通过表格和流程图充分论证了删除的合理性和安全性。测试覆盖了所有被拦截类型且全部通过。信息非常全面，维护者可以直接理解变更并开始审查。"",
+    ""summary"": ""描述详尽，包含问题分析、验证过程和硬件证据，完全满足审查需求。"",
+    ""missing_items"": [],
+    ""suggestions"": []
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，PR描述详尽充分；reasoning自洽且与描述一致；missing_items为空准确反映无缺失关键信息；suggestions为空符合描述完整性，无需改进建议。整体审核通过。""
+}",true,true,true,评审Bot的ok判断合理，PR描述详尽充分；reasoning自洽且与描述一致；missing_items为空准确反映无缺失关键信息；suggestions为空符合描述完整性，无需改进建议。整体审核通过。
+743,[Dot](test) Re-enable tf32/hf32 dot tests and document allow_tf32 param,[Dot],open,"release,document",2026-06-23T12:35:51Z,"Remove skip/xfail marks on test_dot_2, test_dot_2_allow_tf32 and test_dot_2_input_tf32 now that the TA backend supports allow_tf32 / input_precision=""tf32"".
+
+Add allow_tf32 entry to the dot op parameter table, noting the per-chip precision mapping: A2/A3 -> ""hf32"", A5 -> native ""tf32"".
+
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [x] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [x] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 80,
+    ""reasoning"": ""标题清晰说明了变更类型和内容（重新启用tf32/hf32测试并记录参数）。描述正文明确解释了变更（移除跳过标记、添加文档条目）和原因（后端支持allow_tf32），且字符数足够。虽然未提供详细的测试步骤或结果，但结合复选框信息（声明已添加测试）和标题中的测试重启用意图，维护者可以理解变更范围并开始审查。整体信息基本完整，无严重缺失。"",
+    ""summary"": ""描述提供了变更内容和原因，标题明确指出测试启用和文档添加，维护者可理解意图。"",
+    ""missing_items"": [],
+    ""suggestions"": []
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的输出合理。ok判断为true符合描述质量，reasoning自洽，无缺失项和建议。""
+}",true,true,true,评审Bot的输出合理。ok判断为true符合描述质量，reasoning自洽，无缺失项和建议。
+741,[CI](fix) Modify the A5 pipeline starter,[CI],merged,CICD,2026-06-23T11:53:21Z,"Due to compliance issues, the A5 pipeline will be started here using a public account.",,false,,,,,
+738,[ssbuffer](fix) fix detecting cloned ops in CloneOps,[ssbuffer],open,release,2026-06-23T09:10:20Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""标题虽然提到了修复检测克隆操作的问题，但描述部分完全空白，仅包含模板注释和未填写的复选框，没有提供任何具体的变更说明、问题分析、修复逻辑或测试计划。维护者无法理解PR的目的、实现方式和验证手段，因此信息严重不足。"",
+    ""summary"": ""描述为空，仅包含模板，未提供任何实质内容"",
+    ""missing_items"": [""变更描述"", ""问题背景与根因分析"", ""测试计划或测试等价说明""],
+    ""suggestions"": [""请在描述中简要说明修复的问题是什么、为何发生、如何解决"", ""补充测试方法，例如已有的测试用例是否覆盖，或说明无需测试的具体理由""]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 判断合理。PR 描述仅包含模板未填写实质内容，ok=false 正确。reasoning 自洽，suggestions 有效且无强制表述，missing_items 准确反映了缺失的关键信息。""
+}",true,true,true,评审 Bot 判断合理。PR 描述仅包含模板未填写实质内容，ok=false 正确。reasoning 自洽，suggestions 有效且无强制表述，missing_items 准确反映了缺失的关键信息。
+736,[CI](feat) add CODEOWNERS notify job to labeler workflow,[CI],merged,"CICD,document",2026-06-23T07:32:18Z,"## Summary
+
+Adds a `notify-codeowners` job to the existing `labeler.yml` workflow.
+
+When a PR is opened or updated, it:
+1. Parses changed files
+2. Matches them against `.github/CODEOWNERS` rules
+3. Posts a comment @mentioning the relevant code owners with their files
+
+## Behavior
+- Deletes old bot comment before posting new one (no duplicate spam)
+- Skips silently if no CODEOWNERS rules match
+- Shares the same `pull_request_target` trigger and permissions as the existing labeler job
+
+## Example output
+
+> 📂 **Code Owners** — the following files under code ownership were modified.
+>
+> Please review:
+>
+> **@TecJesh**
+> - `lib/Analysis/Alias.cpp`
+>
+>  Generated by labeler workflow
+
+## Note
+Also fixes pre-existing trailing whitespace and missing EOF newline in `docs/zh/installation_guide.md` and `docs/zh/quick_start.md` — these were caught by pre-commit `--all-files` and are unrelated to the main change.
+
+","{
+    ""ok"": true,
+    ""score"": 85,
+    ""reasoning"": ""该 PR 描述清晰说明了新增 job 的动机、行为、触发条件和输出示例，还解释了附带 whitespace 修复的原因。维护者可以立即理解变更内容和意图，虽然未提及测试方案，但对于 CI 配置变更来说描述已足够详细。"",
+    ""summary"": ""描述内容结构清晰，包含变更摘要、行为细节和示例输出，信息充分。"",
+    ""missing_items"": [],
+    ""suggestions"": [
+        ""如果已有测试或验证方式，可以在描述中补充一句，帮助维护者确认变更正确性。""
+    ]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""审核通过。评审Bot的ok判断合理，理由自洽，缺失项列表准确（无实质缺失），建议具体且无强制表述。""
+}",true,true,true,审核通过。评审Bot的ok判断合理，理由自洽，缺失项列表准确（无实质缺失），建议具体且无强制表述。
+731,[WIP][ssbuffer](fix) anatate analyzeArgs PASS,[WIP],open,release,2026-06-23T06:47:25Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""PR描述仅包含模板和占位符，未填写任何实际内容（如变更说明、动机、测试方法等），标题带有[WIP]且包含拼写错误，无法让维护者理解该PR的具体改动和验证方式，属于信息严重不足。"",
+    ""summary"": ""描述几乎空白，只有模板占位符，无有效信息。"",
+    ""missing_items"": [
+        ""缺失具体的变更说明（为何修改、如何修改）"",
+        ""缺失测试计划或验证方法"",
+        ""缺失相关issue或背景信息"",
+        ""模板中的选择项未实际填写（如test类型、lit test说明）""
+    ],
+    ""suggestions"": [
+        ""请用自然语言描述该PR解决了什么问题，以及如何解决"",
+        ""明确测试方式（新测试用例或现有测试覆盖）"",
+        ""如果PR未完成，请在描述中说明当前进展和待办事项"",
+        ""修正标题拼写（如\""annotate\""）并考虑去除[WIP]""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的判定合理：PR描述仅包含模板占位符，无任何实际内容，ok=false正确。reasoning与评分一致，逻辑自洽。missing_items所列项确实缺失，准确。suggestions具体、可执行，无强制表述，有效。整体评审结果正确。""
+}",true,true,true,评审Bot的判定合理：PR描述仅包含模板占位符，无任何实际内容，ok=false正确。reasoning与评分一致，逻辑自洽。missing_items所列项确实缺失，准确。suggestions具体、可执行，无强制表述，有效。整体评审结果正确。
+729,[ssbuffer](fix) fix clone pattern and add dependent value transfer,[ssbuffer],merged,release,2026-06-23T04:45:51Z,"This pull request is designed to fix clone pattern and add dependent value transfer
+
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 55,
+    ""reasoning"": ""标题虽指出了组件和修改点，但描述仅重复标题内容，未提供具体的实现细节、修改动机或测试验证方法。模板中的检查清单均未勾选，且未说明是否添加了测试。维护者无法仅凭当前信息理解变更的完整背景和正确性，因此判定为信息不足。"",
+    ""summary"": ""描述只有一句话重复标题，缺少实质性内容、测试计划和实现背景。"",
+    ""missing_items"": [
+        ""缺少对修改的具体描述和原因背景（如 clone pattern 是什么 bug，dependent value transfer 解决了什么）"",
+        ""缺少测试计划或验证方法（未说明是否添加了测试以及如何验证）""
+    ],
+    ""suggestions"": [
+        ""建议详细解释 clone pattern 的原有缺陷以及 dependent value transfer 的必要性"",
+        ""建议补充测试方式，例如添加了哪些测试用例，或描述人工验证的步骤""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 对 PR 描述的评审结果合理。ok=false 符合描述信息严重不足的实际情况；reasoning 逻辑自洽，指出描述重复标题、缺少细节和测试计划；missing_items 列出的缺失项确实是缺失的关键信息；suggestions 有效且无强制用语，引导补充背景和测试方式。整体评审准确。""
+}",true,true,true,评审 Bot 对 PR 描述的评审结果合理。ok=false 符合描述信息严重不足的实际情况；reasoning 逻辑自洽，指出描述重复标题、缺少细节和测试计划；missing_items 列出的缺失项确实是缺失的关键信息；suggestions 有效且无强制用语，引导补充背景和测试方式。整体评审准确。
+726,[ssbuffer](fix) delete specific func name,[ssbuffer],merged,release,2026-06-23T03:21:19Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 10,
+    ""reasoning"": ""描述仅包含模板占位符和未勾选的复选框，没有任何实质性的变更说明、原因或测试信息。标题虽有简单指示但不足以让维护者理解具体修改内容和背景。整体信息严重缺失，无法支持审核。"",
+    ""summary"": ""描述内容仅复制了模板，未填写任何实际信息，导致无法判断变更意图和验证方式。"",
+    ""missing_items"": [
+        ""变更内容具体描述"",
+        ""变更原因和动机"",
+        ""删除的函数名及其影响的说明"",
+        ""测试方法或验证结果（如适用）""
+    ],
+    ""suggestions"": [
+        ""请明确说明删除了哪个函数以及为什么需要删除"",
+        ""补充修复的背景（如Bug编号、或导致的问题）"",
+        ""说明是否经过测试，或说明无需测试的理由""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理（描述仅含模板，信息严重缺失）；reasoning自洽；suggestions具体且无强制表述；missing_items所列项确实缺失。""
+}",true,true,true,评审Bot的ok判断合理（描述仅含模板，信息严重缺失）；reasoning自洽；suggestions具体且无强制表述；missing_items所列项确实缺失。
+724,[TritonToLinalg](feat) Gather op supports simt,[TritonToLinalg],merged,release,2026-06-23T03:16:38Z,"### Summary
+On A5 devices, the gather op is implemented via the SIMT template in all scenarios.
+
+### Why
+On A5 devices, routing all gather ops through the SIMT path delivers better performance.
+
+### What Changed
+In isSIMTOp(), when the condition isa<triton::GatherOp>(op) && compileOn91095Flag is satisfied, the function now returns true, directing the op to the SIMT path.
+","{
+    ""ok"": true,
+    ""score"": 75,
+    ""reasoning"": ""描述包含了Summary、Why和What Changed三个部分，清楚地说明了在A5设备上将所有Gather op路由到SIMT路径的变更，并给出了具体修改的代码位置。维护者可以理解该PR的意图和实现细节。但缺少测试计划或验证说明，对于功能修改而言完整性略有不足。不过整体上仍可基本理解变更内容。"",
+    ""summary"": ""描述较清晰，提供了变更目的和具体改动点，但缺少测试验证信息。"",
+    ""missing_items"": [],
+    ""suggestions"": [""建议补充测试计划或验证方式，例如说明是否已通过lit/unittest测试或提供了性能对比数据。""]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的输出整体合理：ok 判断符合描述质量，reasoning 自洽，建议具体且无强制表述，missing_items 为空准确（测试计划未被视为必填缺失）。未发现明显问题。""
+}",true,true,true,评审 Bot 的输出整体合理：ok 判断符合描述质量，reasoning 自洽，建议具体且无强制表述，missing_items 为空准确（测试计划未被视为必填缺失）。未发现明显问题。
+721,[ssbuffer](fix) Operand add into seed only when def have oneUses,[ssbuffer],merged,release,2026-06-22T15:35:53Z,"fix: To avoid error: """"Cube Seed already have a cycle!!"",  add limits: matmul's operand add into seed only when def have oneUses
+
+# New contributor declaration
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [x] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [x] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [x] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [x] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 65,
+    ""reasoning"": ""描述基本说明了修改的目的（避免'Cube Seed already have a cycle!!'错误）和具体变更（operand加入seed时限制def只有一处使用），使维护者能基本理解改动意图。但存在两个重要缺失：一是模板中声明不需要测试，理由却留空为'FILL THIS IN'，未提供任何说明；二是后续测试选择存在矛盾（先选不需要测试，又选已添加lit测试），未澄清实际测试情况。这导致维护者无法确认是否经过验证，必须追问细节。结合整体信息量不足，评分65，判定为不合规。"",
+    ""summary"": ""描述了改动原因和做法，但测试理由缺失且选项矛盾，信息不完整。"",
+    ""missing_items"": [
+        ""未填写不需要测试的理由"",
+        ""测试计划或验证方法缺失"",
+        ""模板测试选择存在矛盾未澄清""
+    ],
+    ""suggestions"": [
+        ""补全不需要测试的具体理由，例如为什么现有测试已覆盖或本次变更不改变行为"",
+        ""澄清测试选择矛盾：如果确实没有添加测试，请取消勾选lit测试相关选项；如果添加了，请勾选相应测试类型并说明测试内容"",
+        ""可补充简单的示例或上下文，帮助理解触发该错误的场景""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok=false判断合理，描述确实存在测试理由未填写及选择矛盾，信息不完整；reasoning自洽，准确指出问题；missing_items所列缺失项真实存在；suggestions具体可执行，无强制表述。整体评审正确。""
+}",true,true,true,评审Bot的ok=false判断合理，描述确实存在测试理由未填写及选择矛盾，信息不完整；reasoning自洽，准确指出问题；missing_items所列缺失项真实存在；suggestions具体可执行，无强制表述。整体评审正确。
+718,[ssbuffer](fix) fix detecting cloned ops in CloneOps,[ssbuffer],open,release,2026-06-22T13:39:18Z,"**DynamicCVPipeline: fix detecting in CloneOps**
+
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 40,
+    ""reasoning"": ""描述中只有标题和一句简述('DynamicCVPipeline: fix detecting in CloneOps')，其余内容为未填写的模板注释和未勾选的检查项。未说明问题的具体表现、根因分析、修复方法，也没有任何测试验证信息或测试计划。信息严重不足，无法支持评审。"",
+    ""summary"": ""描述内容极简，缺少对问题、修复、测试的必要说明。"",
+    ""missing_items"": [
+        ""问题描述或相关背景"",
+        ""具体修复方法或变更说明"",
+        ""测试计划或验证方式""
+    ],
+    ""suggestions"": [
+        ""补充修复的具体问题背景和根因分析"",
+        ""说明修复做了哪些更改以及如何确保正确性"",
+        ""增加测试覆盖信息，如添加了哪些测试或如何验证修复有效""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""原始描述只有标题和未填写的模板，缺失问题背景、修复方法和测试计划等关键信息，因此评审Bot给出的ok=false合理；reasoning与判断一致，逻辑自洽；suggestions具体、可执行且无强制表述，审核总体正确。""
+}",true,true,true,原始描述只有标题和未填写的模板，缺失问题背景、修复方法和测试计划等关键信息，因此评审Bot给出的ok=false合理；reasoning与判断一致，逻辑自洽；suggestions具体、可执行且无强制表述，审核总体正确。
+716,[API](fix) Drop private overflow_mode from tl.cast and tensor.to,[API],open,restricted-files,2026-06-22T12:51:50Z,"## Related Issue
+#645 
+
+## Summary
+This PR removes the `overflow_mode` parameter from `tl.cast` and `tensor.to`, which was an Ascend-local extension not present in upstream Triton.
+
+Before this change, both `tensor.to` and `semantic.cast` carried an extra `overflow_mode` parameter (default `None`):
+
+```python
+# core.py — tensor.to (before)
+def to(self, dtype, fp_downcast_rounding=None, bitcast=False,
+       overflow_mode: Optional[str] = None, _builder=None):
+    return semantic.cast(self, dtype, _builder, fp_downcast_rounding, overflow_mode)
+
+# semantic.py — cast (before)
+def cast(input, dst_ty, builder,
+         fp_downcast_rounding=None, overflow_mode: Optional[str] = None):
+    ...
+    elif overflow_mode == ""saturate"" and \
+        (src_sca_ty.is_int_unsigned() or dst_sca_ty.is_int_unsigned()) and \
+        src_sca_ty.int_bitwidth >= dst_sca_ty.int_bitwidth:
+        return cast(cast(input, tl.float32, builder), dst_sca_ty, builder)
+```
+
+After this PR, the signatures and behavior match upstream exactly:
+
+```python
+# core.py — tensor.to (after)
+def to(self, dtype, fp_downcast_rounding=None, bitcast=False, _builder=None):
+    return semantic.cast(self, dtype, _builder, fp_downcast_rounding)
+
+# semantic.py — cast (after)
+def cast(input, dst_ty, builder,
+         fp_downcast_rounding=None) -> tl.tensor:
+    # (the elif overflow_mode branch is removed)
+```
+
+## Why this rollback is needed
+
+### 1. API inconsistency with upstream and within triton-ascend itself
+
+- Upstream Triton does not have `overflow_mode` on `tl.cast` or `tensor.to`.
+- The `tensor.to` method passes `overflow_mode` but the standalone `tl.cast` free function does **not**, creating an internal API mismatch where `x.to(dtype, overflow_mode=""saturate"")` works but `tl.cast(x, dtype, overflow_mode=""saturate"")` does not.
+
+### 2. NPU compiler crash when overflow_mode=""saturate""
+
+When `overflow_mode=""saturate""` is used, the float32 intermediate cast path
+produces IR that the Ascend NPU compiler cannot lower:
+
+```
+error: 'hivm.hir.vcast' op currently don't support cast uint32_t_to_float_rintmode
+```
+
+The `uint32` → `float32` cast instruction required by the saturate workaround
+is not supported by the current NPU toolchain, making the feature effectively
+broken. Users who try to use it hit a compiler crash.
+
+### 3. Aligns with upstream semantics for integer casts
+
+Upstream Triton's `tl.cast` for integer-to-integer narrowing uses hardware
+truncation (wrap-around), which matches C semantics. The Ascend-local
+`saturate` extension diverged from this behavior. Removing it makes Ascend
+kernels behave identically to CUDA/ROCm kernels for the same Triton source
+code.
+
+## Why this rollback is safe
+
+### No behavioral change for existing code
+
+| Call pattern | Before (Ascend) | After (aligned) |
+|---|---|---|
+| `tl.cast(x, tl.int16)` | trunc (unchanged) | trunc (unchanged) |
+| `x.to(tl.int16)` | trunc (unchanged) | trunc (unchanged) |
+| `x.to(tl.int16, overflow_mode=""saturate"")` | **compiler crash** ❌ | `TypeError` (unknown kwarg) → user must migrate |
+
+The only affected case — `overflow_mode=""saturate""` — is already broken at
+runtime (NPU compiler crash), so no working functionality is lost.
+
+### Users who need saturate behavior can use explicit clamps
+
+```python
+# Before: broken, crashes the compiler
+y = x.to(tl.int16, overflow_mode=""saturate"")
+
+# After: correct, explicit, portable across backends
+x_clamped = tl.clamp(x, -32768, 32767)
+y = x_clamped.to(tl.int16)
+```
+
+This is more explicit about the intent and works reliably across all backends.
+
+## Changes
+
+| File | Change |
+|---|---|
+| `python/triton/language/core.py` | Remove `overflow_mode` parameter from `tensor.to()` signature and `semantic.cast` call |
+| `python/triton/language/semantic.py` | Remove `overflow_mode` parameter and the `elif overflow_mode == ""saturate""` branch from `cast()` |
+
+## User Impact
+
+No impact for code that does not use `overflow_mode`. Code that passes
+`overflow_mode=""saturate""` will get a `TypeError` at JIT-compile time and
+must be updated to use `tl.clamp` + `tl.cast` as shown above.
+
+## CheckList
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [x] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [x] This PR does not need a test because it removes a broken Ascend-local extension that already crashes the NPU compiler; aligning with upstream behavior requires no new tests.
+
+- Select one of the following.
+  - [x] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 95,
+    ""reasoning"": ""该PR描述非常详尽，包含了问题背景（Related Issue）、变更总结、为什么需要回滚（三点理由：API不一致、NPU编译器崩溃、对齐上游语义）、为什么回滚安全（行为分析表、用户迁移方案）、具体文件变更、用户影响，以及CheckList的勾选。虽然未添加新测试，但明确解释了不需要测试的原因（删除的feature已损坏）。描述整体清晰专业，维护者可以立即理解变更并开始审查。"",
+    ""summary"": ""PR描述完整，提供了充分的上下文和理由，符合合规要求。"",
+    ""missing_items"": [],
+    ""suggestions"": []
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的输出正确。PR描述质量高，ok判断合理；missing_items为空反映了描述完整性；reasoning自洽；suggestions为空且无强制表述，有效。""
+}",true,true,true,评审Bot的输出正确。PR描述质量高，ok判断合理；missing_items为空反映了描述完整性；reasoning自洽；suggestions为空且无强制表述，有效。
+713,[CI](feat) Add docs PR gate,[CI],open,"CICD,restricted-files",2026-06-22T12:06:33Z,"## Summary
+
+Adds a documentation gate that runs the docs checker on the docs changed in a pull request.
+
+## Details
+
+- **Triggers:** `pull_request` runs an incremental check (only the changed `.md` / `.mdx` / `_toc.yaml`);`workflow_dispatch` and a nightly `schedule` run a full scan.
+- **Checks:** markdownlint, tag-closed, link validity, resource existence, and codespell.
+- `scripts/docs-pr-check.sh` fetches the checker from gitcode `openeuler/docs-website@ci`, runs it against the local config, and fails the job when the report contains errors.
+- All rules and whitelists live under `.github/docs-ci/`, so they are version-controlled with the repo.
+","{
+    ""ok"": true,
+    ""score"": 85,
+    ""reasoning"": ""描述提供了清晰的变更摘要和详细解释，包括触发器、检查内容、脚本行为以及配置管理方式。维护者能完全理解该PR的目的和实现机制。虽然未显式声明测试计划，但描述中已隐含通过CI运行结果验证的方式。综合考虑信息完整性和清晰度，给出85分，属于合规范围。"",
+    ""summary"": ""描述详细，信息充分，维护者可据此进行审查。"",
+    ""missing_items"": [],
+    ""suggestions"": [
+        ""可以补充该文档门解决的背景问题或关联的issue，便于追溯"",
+        ""若已有测试覆盖，可明确说明测试类型或方法""
+    ]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的判定正确，ok 判断合理，reasoning 自洽，suggestions 有效且无强制表述，missing_items 为空与实际情况一致。""
+}",true,true,true,评审 Bot 的判定正确，ok 判断合理，reasoning 自洽，suggestions 有效且无强制表述，missing_items 为空与实际情况一致。
+711,[Docs](feat) Add libdevice autodoc documentation,[Docs],open,document,2026-06-22T11:40:11Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""描述体仅包含模板注释和空复选框，未填写任何实际变更内容、测试方法或相关上下文。标题虽指明了文档类型和大致主题，但缺乏对具体改动范围、新增内容、使用方式等的说明，维护者无法理解该PR的实质变更，更无从进行有效审查。"",
+    ""summary"": ""描述为空（仅模板），未提供有效信息，无法支撑审查。"",
+    ""missing_items"": [
+        ""具体的变更描述（如新增了哪些文档、修改了哪些文件）"",
+        ""验证方式（是否需要测试，如何验证文档正确性）"",
+        ""相关Issue或背景说明""
+    ],
+    ""suggestions"": [
+        ""补充本次文档变更的具体内容，例如新增了哪些libdevice函数的说明、生成的格式等。"",
+        ""说明如何验证文档生成正确性，例如本地构建查看效果或与现有文档一致性。"",
+        ""如果有对应的Issue或引用，可以附上链接以便了解动机。""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的判断合理：PR 描述仅包含空模板，无实质内容，ok=false 正确；缺失项均为实际缺失；建议具体且无强制表述；推理自洽。""
+}",true,true,true,评审 Bot 的判断合理：PR 描述仅包含空模板，无实质内容，ok=false 正确；缺失项均为实际缺失；建议具体且无强制表述；推理自洽。
+708,update installation_guide.md and quick_start.md,[Misc],merged,document,2026-06-22T09:56:57Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 15,
+    ""reasoning"": ""标题仅提到更新两个文件，未说明具体改了什么、为什么改。描述正文完全复制模板内容，没有用户提供的任何实质性信息（如变更摘要、测试方法等），无法供维护者理解变更内容或开始审核。"",
+    ""summary"": ""正文无用户自述内容，仅含模板占位符，标题过于笼统"",
+    ""missing_items"": [""变更的详细说明和目的"", ""测试方法或验证结果""],
+    ""suggestions"": [""在描述中简要说明更新了哪些部分以及更新的原因"", ""提供测试方式或验证步骤""]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 对 PR 描述的评审正确：ok=false 合适，reasoning 自洽，suggestions 有效且无强制表述，missing_items 反映实际缺失。""
+}",true,true,true,评审 Bot 对 PR 描述的评审正确：ok=false 合适，reasoning 自洽，suggestions 有效且无强制表述，missing_items 反映实际缺失。
+706,Fix linearize case error,[Misc],closed,restricted-files,2026-06-22T09:39:27Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+## Summary
+
+Fix the probabilistic precision error of `test_linearize_jump_load_with_mask`. Added a `MaskedLoadOtherCanonicalizer` pattern in `DiscreteMaskAccessConversionPass` that automatically fills `other = 0` for masked `LoadOp` with `other = None`, ensuring consistent behavior with the pre-care_padding-removal semantics — out-of-bounds elements default to zero — across all lowering paths.
+
+## Why
+
+The frontend removal of the `care_padding`-related intrusive modification from `semantic.py` previously auto-filled `other = 0.0` when `tl.load(ptr, mask=mask)` was called without an explicit `other` argument. After its removal, the IR-level `triton::LoadOp` carries `other = null`.
+
+Ascend backend lowering passes handle `other = null` inconsistently:
+
+- **`DiscreteMaskLoadConversion`** (discrete mask path): handled correctly, auto-fills zero.
+- **`TritonToLinalg/LoadStoreConverter`** (continuous mask path): the `if (other)` branch is skipped, leaving the unmasked region of `allocOp` with uninitialized memory. The random garbage values manifest as probabilistic precision errors.
+
+## Fix
+
+Added handling logic for `other = null` in `DiscreteMaskAccessConversionPass`. For any `LoadOp` where `mask != null && other == null`, the `other` value is canonicalized to zero.
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 85,
+    ""reasoning"": ""描述包含详细的背景、问题分析和修复方案，虽然标题与描述内容略有出入，但整体信息完整，维护者可以理解变更意图和实现方法。缺少测试验证的明确说明（如是否添加新测试或运行了哪些已有测试），但描述中提到了关联测试并暗示了验证途径，不影响基本理解。"",
+    ""summary"": ""描述信息较完整，包括变更原因、修复逻辑，可支持维护者进行审查。"",
+    ""missing_items"": [],
+    ""suggestions"": [
+        ""考虑根据实际修复内容调整标题，使其更准确（例如反映 mask load 相关修复）"",
+        ""在描述中明确说明测试验证情况，例如是否添加了新测试或运行了哪些现有测试""
+    ]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的 ok 判断合理（描述信息充分），reasoning 自洽，suggestions 有效且无强制表述，missing_items 准确。整体评审正确。""
+}",true,true,true,评审 Bot 的 ok 判断合理（描述信息充分），reasoning 自洽，suggestions 有效且无强制表述，missing_items 准确。整体评审正确。
+703,[ssbuffer](fix) delete specific func name,[ssbuffer],open,release,2026-06-22T07:54:07Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""描述只包含了PR模板的注释和未填写的检查列表，没有任何实际描述变更内容、原因或测试方法的文本。标题“[ssbuffer](fix) delete specific func name”不够具体，无法清晰表达变更意图，且未说明为何删除、影响范围以及如何验证。"",
+    ""summary"": ""描述为空（仅模板注释），标题不够清晰，无法让维护者了解变更内容和测试方式。"",
+    ""missing_items"": [""变更的具体内容描述（如删除哪个函数、为什么删除）"", ""变更原因或底层逻辑"", ""测试方法或验证结果""],
+    ""suggestions"": [""请填写实际描述，解释为何删除特定函数名以及变更的影响"", ""添加测试计划或说明如何验证变更，例如运行哪些测试场景""]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok=false判断合理，描述确实只有模板未填写内容；missing_items准确对应缺失的关键信息；suggestions具体且无强制性表述；reasoning自洽与判断一致。""
+}",true,true,true,评审Bot的ok=false判断合理，描述确实只有模板未填写内容；missing_items准确对应缺失的关键信息；suggestions具体且无强制性表述；reasoning自洽与判断一致。
+701,[SIMT Template](feat) Support StrideLoad/Store ops,[SIMT Template],merged,release,2026-06-22T07:29:40Z,"## Summary
+
+Support the dedicated `stride_load` / `stride_store` route for static
+non-power-of-two strided GM accesses, while preserving the existing
+`indirect_load` / `indirect_store` behavior where it is still required.
+
+## Why
+
+The existing indirect path can represent irregular accesses, but it is too
+general for common strided accesses. For static non-power-of-two stride cases,
+the compiler already knows the access can be described as a scalar base offset
+plus per-axis stride and valid element counts. Lowering those cases through
+`stride_load` / `stride_store` preserves that structure for the SIMT template
+instead of first materializing a full per-element offset tensor.
+
+This is especially useful for 1D-3D strided loads and stores, where the stride
+ABI directly matches the access pattern and avoids routing performance-sensitive
+regular strides through the more general indirect path.
+
+There are still cases where indirect access is the correct representation:
+
+- Dynamic strides must stay on the structured DMA/coalescing path, because they
+  may be stride-1 or power-of-two at runtime.
+- `stride_load` / `stride_store` only support 1D-3D, so 4D-5D accesses continue
+  to use `indirect_load` / `indirect_store`.
+- Masked single-tile power-of-two AddPtr cases keep the upstream indirect route
+  to avoid the structured strided-copy boundary-size issue.
+- Indirect loads now also carry volatility information so the lowering can avoid
+  unnecessary volatile calls when no prior same-root store can affect the load.
+
+## Behavior
+
+- Static non-power-of-two 1D-3D load/store accesses route to
+  `triton_stride_load` / `triton_stride_store`.
+- Dynamic stride and structured DMA-friendly cases remain out of the SIMT stride
+  rewrite.
+- 4D-5D strided accesses keep the indirect fallback.
+- Indirect-load tests cover both volatile and non-volatile cases.
+",,false,,,,,
+698,Merging addition code from release/3.2.2/dev to release/3.2.2,[Misc],closed,"CICD,release",2026-06-22T06:50:53Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""PR 描述体仅包含模板指令和未填写的复选框，没有任何实质性内容描述变更的背景、内容、测试方法或相关链接。标题虽然是合并信息，但未提供任何具体细节。维护者无法据此了解此次合并的目的和影响，无法开始审查。"",
+    ""summary"": ""描述体为空（仅有模板占位符），未提供任何实际变更或测试信息。"",
+    ""missing_items"": [""缺失变更摘要"", ""缺失测试计划或验证方法"", ""缺失相关 issue 或链接"", ""缺失变更范围及影响说明""],
+    ""suggestions"": [""请简要描述合并的代码范围及目的"", ""说明测试方式（如 CI 是否通过）"", ""关联相关 issue 或 PR 链接以便追溯""]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的判断合理。描述仅有模板占位符，无实质性内容，因此 ok=false 正确；missing_items 准确反映了确实缺失的信息；suggestions 建议具体且无强制表述；reasoning 与判断一致。""
+}",true,true,true,评审 Bot 的判断合理。描述仅有模板占位符，无实质性内容，因此 ok=false 正确；missing_items 准确反映了确实缺失的信息；suggestions 建议具体且无强制表述；reasoning 与判断一致。
+694,[Docs](fix) fix document word issues,[Docs],merged,document,2026-06-22T03:35:43Z,"
+Modify the document","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""描述仅包含一句话“Modify the document”，未说明具体修改了哪个文档、哪些词语、修改原因及背景，也未提及任何测试或验证方法。维护者无法从标题和描述中理解变更的实际内容和影响，无法启动审查。"",
+    ""summary"": ""描述过于简短，缺乏实质性内容，属于模糊无细节的描述。"",
+    ""missing_items"": [
+        ""具体修改内容说明"",
+        ""修改原因或背景"",
+        ""受影响的文件范围"",
+        ""测试或验证方法""
+    ],
+    ""suggestions"": [
+        ""请详细说明修改了哪个文档、哪些词语以及为什么修改（如语法错误、措辞不清等）"",
+        ""如果涉及多个文件，请列出文件列表并简要说明每个文件的改动"",
+        ""提供验证方式，例如查看渲染后的文档确认修改是否正确""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的输出正确：ok=false合理因为描述过于简短、缺乏实质性内容；reasoning自洽，明确指出了缺失的具体方面；suggestions具体、可执行且没有强制表述；missing_items准确列出了描述中真正缺失的关键信息。""
+}",true,true,true,评审Bot的输出正确：ok=false合理因为描述过于简短、缺乏实质性内容；reasoning自洽，明确指出了缺失的具体方面；suggestions具体、可执行且没有强制表述；missing_items准确列出了描述中真正缺失的关键信息。
+691,[ssbuffer](fix) Split a*b+c when may not execute (Temp for wzw),[ssbuffer],open,release,2026-06-22T02:18:27Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""PR描述仅包含模板占位符，未填写任何实际变更说明、测试计划或相关背景信息。标题虽提及‘Split a*b+c when may not execute’，但过于简略且标注‘Temp for wzw’，不足以让维护者理解变更内容和必要性。统客观认，信息严重不足，无法启动审查。"",
+    ""summary"": ""描述体只含模板，无实质内容，标题信息不够充分。"",
+    ""missing_items"": [
+        ""变更的详细说明（如背景、目的、实现思路）"",
+        ""测试计划或验证方法"",
+        ""是否新增测试及测试文件位置"",
+        ""修复或新增功能的描述"",
+        ""相关Issue链接（如有）""
+    ],
+    ""suggestions"": [
+        ""请在此处简述变更内容和动机，例如需要拆分 a*b+c 的场景及原因"",
+        ""补充如何验证此修改的测试步骤或测试结果"",
+        ""如果该PR是临时或待定状态，请标注清楚，并预计何时补充完整描述""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的 ok=false 判断符合实际情况（描述仅为模板占位符，无实质内容）。reasoning 逻辑自洽，与 ok 和 score 一致。suggestions 具体、可操作，无强制表述。missing_items 列出的信息确实缺失，虽然 '相关Issue链接' 为非强制项，但注明 '如有' 仍合理。整体评审输出正确。""
+}",true,true,true,评审 Bot 的 ok=false 判断符合实际情况（描述仅为模板占位符，无实质内容）。reasoning 逻辑自洽，与 ok 和 score 一致。suggestions 具体、可操作，无强制表述。missing_items 列出的信息确实缺失，虽然 '相关Issue链接' 为非强制项，但注明 '如有' 仍合理。整体评审输出正确。
+688,[tutorial](feat) add KvRmsNormRopeCache tutorial,[tutorial],open,document,2026-06-20T05:05:01Z,"Adds the self-contained KvRmsNormRopeCache Triton-Ascend tutorial delivery.
+
+Includes candidate implementation, operator-local validation entrypoint, profiler-based timing parser, canonical validation logs, README/DESIGN/SELF_VALIDATION_REPORT, and Huawei-template DOCX/XLSX artifacts.
+
+Validation evidence:
+- canonical log: third_party/ascend/tutorials/kv_rms_norm_rope_cache/logs/kv_rms_norm_rope_cache_validation.jsonl
+- total cases: 60
+- main speed gate: N/A because torch_npu has no runnable timed sample for this operator workload
+- auxiliary Torch semantic timing: 57 timed / 54 speedup samples, active/active geomean speedup 32.082368x
+- local checks: py_compile, stale-artifact scan, single validation JSONL, git diff --check, DOCX/XLSX structure audit","{
+    ""ok"": true,
+    ""score"": 92,
+    ""reasoning"": ""描述详尽地列出了PR内容、包含的组件、验证证据、测试用例数量和性能数据，足以让维护者理解变更并开始审查。"",
+    ""summary"": ""提供了充分的变更说明和验证信息"",
+    ""missing_items"": [],
+    ""suggestions"": []
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的判断合理，描述详尽且无缺失项，建议部分为空且无强制表述，reasoning与ok一致。""
+}",true,true,true,评审Bot的判断合理，描述详尽且无缺失项，建议部分为空且无强制表述，reasoning与ok一致。
+685,"CVSplit scheduling POC (Flash Attention, A5)",[Misc],open,"release,document,restricted-files",2026-06-19T19:58:18Z,"## Summary
+Proof-of-concept **CVSplit scheduling** pass for Flash Attention on Ascend A5 (squashed on `release/3.2.2`):
+
+- K-loop unroll (factor 4) + interleaved CUBE/VECTOR `scope.scope` split
+- ROW_SPLIT dual-veccore vector path (`get_sub_block_idx`, 16-row UB tiles)
+- Q `mem_unique` + `bind_buffer` for aligned L1 QK operand
+- Lit regression: `unittest/Conversion/General/CVSplitScheduling/cv_split_scheduling_fa.mlir`
+- FA test harness: `third_party/ascend/lib/CVSplitScheduling/test/test_fa_accuracy.py`
+
+## Verified config (A5 simulator)
+- B=1, H=1, N_CTX=8192, D=64, BLOCK_M=BLOCK_N=32, unroll=4, 1 active query tile
+- **Accuracy:** PASS vs PyTorch (`allclose`, max diff 0.0034)
+- **Latency:** **133.7 µs** (~220k cycles @ 1.648 GHz) from `trace.json` span
+
+## Test plan
+- [ ] Rebuild wheel; run lit: `triton-opt ... cv_split_scheduling_fa.mlir | FileCheck`
+- [ ] Simulator E2E with `FA_VARIANT=cvsplit TRITON_FORCE_DCVP=1`
+- [ ] Confirm no regression on non-FA kernels (pass gated)
+
+Public fork branch: https://github.com/amroshahbari27/triton-ascend-cvsplit-poc/tree/v-split-poc","{
+    ""ok"": true,
+    ""score"": 90,
+    ""reasoning"": ""描述非常详细，包含清晰的变更摘要（CVSplit scheduling pass for Flash Attention）、技术要点、测试计划（lit回归测试和simulator E2E）以及验证结果（准确性和延迟数据），足以让维护者理解变更内容并开展审查。虽然未显式填写模板中的新贡献者声明清单，但描述本身信息充分，不影响核心理解。"",
+    ""summary"": ""描述提供了充分的变更说明、测试计划和验证结果，符合审查所需的信息完整性要求。"",
+    ""missing_items"": [],
+    ""suggestions"": [""考虑在描述中显式填写PR模板中的检查清单（如运行pre-commit、测试类型选择等），以完全符合项目惯例。"" ]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的 ok=true 判断合理：描述信息充分，包含清晰摘要、技术细节、测试计划和验证结果，能够支持审查。reasoning 自洽：指出描述详细但未填写模板声明清单，仍符合信息完整性，逻辑连贯。suggestions 有效：具体建议填写检查清单，措辞为“考虑”，无强制表述，是对模板惯例的建设性补充。missing_items 为空准确：描述没有严重缺失关键信息，未列出的模板声明不是必须的。整体评审输出正确。""
+}",true,true,true,评审 Bot 的 ok=true 判断合理：描述信息充分，包含清晰摘要、技术细节、测试计划和验证结果，能够支持审查。reasoning 自洽：指出描述详细但未填写模板声明清单，仍符合信息完整性，逻辑连贯。suggestions 有效：具体建议填写检查清单，措辞为“考虑”，无强制表述，是对模板惯例的建设性补充。missing_items 为空准确：描述没有严重缺失关键信息，未列出的模板声明不是必须的。整体评审输出正确。
+682,[ssbuffer](fix): handle multi-result ops correctly in inner scope double buffer,[ssbuffer],open,release,2026-06-18T10:13:57Z,"collectBufferValues and processTensorDependencies used seenOps (SmallVector<Operation*>) for dedup, which collapsed all results of a multi-result op (e.g. scf.if with 4 yields) into a single entry. Only the first result was buffered; the rest were skipped.
+
+Changed dedup to track by Value (seenVals) so each individual result is independently evaluated and buffered.
+
+Co-Authored-By: DeLong code
+
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 75,
+    ""reasoning"": ""描述明确指出了 bug 的原因（seenOps 将多结果操作的所有结果压缩为一项，导致仅缓冲第一个结果）和修复方案（改为按 Value 去重）。标题也清晰标注了 fix 类型和作用范围。但描述中未提及任何测试计划、验证方式或测试结果，也未说明是否运行了 pre-commit 或现有测试通过情况，导致信息完整性欠缺。综合评分 75 分，属于基本可理解但缺少关键验证信息的水平。"",
+    ""summary"": ""提供了具体的 bug 分析和修复方法，但缺乏测试验证说明。"",
+    ""missing_items"": [""缺失测试验证说明""],
+    ""suggestions"": [""建议在描述中添加测试计划，例如是否添加了 lit 测试或运行了哪些现有测试来验证修复。""]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，描述提供了明确的bug原因和修复方法；reasoning自洽，与判断一致；suggestions具体且无强制表述；missing_items准确指出了缺失的测试验证说明。""
+}",true,true,true,评审Bot的ok判断合理，描述提供了明确的bug原因和修复方法；reasoning自洽，与判断一致；suggestions具体且无强制表述；missing_items准确指出了缺失的测试验证说明。
+680,[Doc](fix) update code owners in third_party/ascend,[Doc],merged,release,2026-06-18T09:40:24Z,"## Summary
+This PR updates the `.github/CODEOWNERS` entry for `third_party/ascend/`, replacing the inactive owner `@HEX1A0A` with three active core developers: `@KanuaK`, `@WuTYSFG`, and `@hongziqi`.
+
+Before:
+
+```gitignore
+third_party/ascend/  @HEX1A0A
+```
+
+After:
+
+```gitignore
+third_party/ascend/  @KanuaK @WuTYSFG @hongziqi
+```
+
+## Why this change is needed
+
+1. **`@HEX1A0A` is no longer active on triton-ascend.** Leaving them as the sole CODEOWNER causes PRs affecting `third_party/ascend/` to stall waiting for review from someone who is not available day-to-day.
+
+2. **Single point of failure.** One person covering ~30 subdirectories spanning C++ MLIR passes, Python backend, language frontend, and tests creates a review bottleneck and a bus-factor risk.
+
+3. **Aligns with the community pattern.** Upstream already uses multiple co-owners for backend directories (e.g., `third_party/amd/` and `third_party/proton/` are assigned to domain experts). This PR brings `third_party/ascend/` in line with that practice.
+
+## Decision rationale
+
+The change was discussed at the [2026-06-18 Triton-Ascend BiWeekly Meeting](https://github.com/triton-lang/triton-ascend/blob/main/docs/zh/community/community_technical_meeting.md) and the team voted on three options:
+
+| Option | Decision |
+|---|---|
+| Keep a single owner | ❌ Still a bottleneck |
+| Granular owners per subdirectory (MLIR vs. Backend vs. Language…) | ❌ Over-engineers the review assignment for the current team size |
+| **Multiple co-owners for the full directory** | ✅ **Adopted** — lightweight, provides redundancy, any one of the three can review |
+
+Attendees who reached consensus: Hong Ziqi, Zhu Guanda, Zhou Yihan, Cheng Maofan, Wu Tianyao, Zhou Hao, Hu Qiao.
+
+## User Impact
+
+No code change. This is a repository governance update only. PRs touching `third_party/ascend/` will now request review from three active maintainers instead of one inactive maintainer.
+
+## Related ISSUE
+https://github.com/triton-lang/triton-ascend/issues/667
+
+## CheckList
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [x] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [x] This PR does not need a test because it only updates the CODEOWNERS governance file; no code or build behavior is affected.
+
+- Select one of the following.
+  - [x] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 95,
+    ""reasoning"": ""该PR描述非常详细，涵盖了更改内容、动机（原owner不活跃、单点故障、符合社区模式）、决策过程（会议讨论和投票选项）、用户影响（纯治理更新，无代码变化）以及相关ISSUE链接。检查清单也标注了相应选项。尽管pre-commit未运行，但描述中已明确说明，不影响理解。整体信息完整，可直接用于审查。"",
+    ""summary"": ""描述清晰详尽，包含更改原因、决策过程和影响说明，完全满足审查要求。"",
+    ""missing_items"": [],
+    ""suggestions"": []
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的判断合理，描述信息充分，ok=true 符合实际情况；reasoning 自洽，与打分和判断一致；missing_items 为空准确，suggestions 无误。整体评审正确。""
+}",true,true,true,评审 Bot 的判断合理，描述信息充分，ok=true 符合实际情况；reasoning 自洽，与打分和判断一致；missing_items 为空准确，suggestions 无误。整体评审正确。
+677,[ssbuffer](fix) ignore gpu.barrier & annotation.mark in memdep,[ssbuffer],merged,release,2026-06-18T09:18:21Z,"# **Main Changes**
+BugFix: Ingoring memref dependencies associated with gpu.barrier & annotation.mark in DataDependencyAnalysis Pass, so that no sync_block_set/wait will be added for these op in InterCoreTransferAndSync Pass. 
+
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 65,
+    ""reasoning"": ""PR描述概述了修改内容（忽略gpu.barrier和annotation.mark的依赖），但没有提供任何测试计划或验证方法。对于涉及依赖分析和同步逻辑的bug修复，缺少测试验证是一个关键缺口，导致维护者无法确认修改的正确性和安全性。虽然标题和描述传达了意图，但根据提交要求，测试信息是必须补充的。"",
+    ""summary"": ""修改内容清楚，但缺少测试计划和验证方法，不足以支撑审查。"",
+    ""missing_items"": [""测试计划或验证方法""],
+    ""suggestions"": [
+        ""建议添加测试方法，例如说明如何通过现有测试或新增lit/unittest验证该修复。"",
+        ""如果可以不做测试，请在模板中明确说明无需测试的具体理由。""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，因为PR描述确实缺少测试计划或验证方法；reasoning与ok自洽；suggestions具体且无强制表述；missing_items准确。""
+}",true,true,true,评审Bot的ok判断合理，因为PR描述确实缺少测试计划或验证方法；reasoning与ok自洽；suggestions具体且无强制表述；missing_items准确。
+674,[Docs](fix) Add constraints of mem access in control flow,[Docs],merged,document,2026-06-18T08:49:23Z,add constraints of mem access in control flow,"{
+    ""ok"": false,
+    ""score"": 40,
+    ""reasoning"": ""标题和描述几乎重复，仅简短说明添加内存访问约束，但未提供变更背景、具体修改的文件或位置、测试/验证方式。虽然标题包含[Docs]表示文档变更，但描述缺乏足够细节供维护者理解变更理由和检查正确性。"",
+    ""summary"": ""描述内容过少，未能有效传达变更的具体内容、原因及验证方式。"",
+    ""missing_items"": [
+        ""变更的背景或原因"",
+        ""具体修改的文件或代码位置"",
+        ""验证方式（如文档构建确认）""
+    ],
+    ""suggestions"": [
+        ""建议说明为什么需要添加这些约束，以及它们对控制流的具体影响"",
+        ""建议明确指出修改了哪些文档文件、新增或修改了哪些内容"",
+        ""建议提供验证方式，例如确认文档能够正确构建或查看渲染结果""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，reasoning自洽，suggestions有效且无强制性表述，missing_items准确反映了PR描述中缺失的关键信息。""
+}",true,true,true,评审Bot的ok判断合理，reasoning自洽，suggestions有效且无强制性表述，missing_items准确反映了PR描述中缺失的关键信息。
+671,[release/3.2.2](revert) Fix boundary size calculation for make_block_ptr,[release/3.2.2],merged,release,2026-06-18T08:09:58Z,Reverts triton-lang/triton-ascend#599,"{
+    ""ok"": false,
+    ""score"": 55,
+    ""reasoning"": ""描述仅包含一句话 'Reverts triton-lang/triton-ascend#599'，虽然指明了回滚的目标 PR，但完全没有给出回滚的原因、预期影响或验证方法。标题中带有 '[release/3.2.2](revert) Fix boundary size calculation for make_block_ptr'，但实际内容是撤销修复，标题与描述的表达不够一致。维护者无法从当前信息判断是否需要合并此回滚，必须额外去查看原始 PR 的上下文才能理解，增加了审阅负担。根据评分参考，此描述信息严重不足，属于非合规。"",
+    ""summary"": ""描述仅给出回滚的 PR 链接，未提供回滚原因和验证信息，维护者无法判断变更的必要性。"",
+    ""missing_items"": [
+        ""回滚原因的详细说明"",
+        ""验证方式或测试结果""
+    ],
+    ""suggestions"": [
+        ""建议在描述中添加回滚的具体原因，例如原始 PR 是否引入了 bug、破坏了稳定版分支的兼容性或导致测试失败"",
+        ""建议说明回滚是否经过本地测试或 CI 验证，确保不会引入新的问题"",
+        ""建议修改标题以明确反映回滚操作，例如使用 '[revert]' 前缀并简要说明回滚目的""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的 ok 判断合理，描述确实严重缺少必要信息；reasoning 自洽，逻辑连贯；suggestions 具体有效且无强制表述；missing_items 列出的缺失项准确。总体评审正确。""
+}",true,true,true,评审 Bot 的 ok 判断合理，描述确实严重缺少必要信息；reasoning 自洽，逻辑连贯；suggestions 具体有效且无强制表述；missing_items 列出的缺失项准确。总体评审正确。
+669,[ssbuffer](fix) fix bug in MemoryEffectsTracker on recursive unknown op,[ssbuffer],open,release,2026-06-18T06:19:46Z,"
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+
+Fixed issues related to memory dependency identification:
+1. Failure to associate `alloc` operations with memory barriers.
+2. Failure to apply known-operation filtering when processing a parent operation containing nested `unknown` operations.
+","{
+    ""ok"": false,
+    ""score"": 65,
+    ""reasoning"": ""描述具体列出了修复的两个问题（alloc操作与内存屏障关联失败、处理递归未知父op时过滤失效），但完全没有提到如何测试这些修复，也没有填写模板中的测试选择（未勾选任何选项且‘FILL THIS IN’未替换）。对于维护者来说，缺乏验证方法是关键缺失，因此判定为信息不充分。"",
+    ""summary"": ""修改内容清晰但缺少验证信息，不符合合规要求"",
+    ""missing_items"": [""缺失测试/验证方法描述"", ""缺失测试选择填写或解释原因""],
+    ""suggestions"": [""建议补充如何验证修复（例如添加的测试用例或人工测试步骤）"", ""如果无需测试，请补充具体理由并填写在模板中""]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，因为描述虽然详细但缺失测试验证信息，符合ok=false的标准。reasoning与ok判断一致，逻辑自洽。suggestions具体且无强制表述，valid。missing_items准确反映了缺失的测试相关项。整体评审合理。""
+}",true,true,true,评审Bot的ok判断合理，因为描述虽然详细但缺失测试验证信息，符合ok=false的标准。reasoning与ok判断一致，逻辑自洽。suggestions具体且无强制表述，valid。missing_items准确反映了缺失的测试相关项。整体评审合理。
+665,[ssbuffer](fix) a*b+c split in special scenes,[ssbuffer],merged,release,2026-06-18T03:33:24Z,"
+Apply a TA-side handling for the native precision errors in the Mojo SWA operator introduced by PR #580.
+
+# New contributor declaration
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [x] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [x] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [x] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [x] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+",,false,,,,,
+663,[docs](fix) correct docstring indent in matrix multiplication example,[docs],open,document,2026-06-18T02:44:39Z,"The matrix multiplication example has a docstring on `generate_tensor` that is indented one space deeper than the rest of the function body, so copying the example into a file and running it raises `IndentationError: unindent does not match any outer indentation level`. This corrects the indentation in both the English and Chinese versions of the page. Closes #659.
+
+# New contributor declaration
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [x] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+  - [x] This PR does not need a test because it only fixes indentation in documentation example code, with no library code change.
+
+- Select one of the following.
+  - [x] I have not added any `lit` tests.
+","{
+    ""ok"": true,
+    ""score"": 85,
+    ""reasoning"": ""该PR描述清晰地说明了问题（docstring缩进错误导致IndentationError）、修正方法（调整中英文版缩进）以及关联的issue（#659）。虽然变更简单，但描述包含了充分的上下文和测试理由（无需新增测试），维护者可以立即理解并审查该改动。未勾选的pre-commit等项不影响信息完整性，整体质量较高。"",
+    ""summary"": ""描述详细解释了文档示例缩进错误的修正，附带issue引用和测试理由，信息充分。"",
+    ""missing_items"": [],
+    ""suggestions"": [
+        ""可以运行该示例代码确认修正后无语法错误"",
+        ""考虑运行pre-commit以确保代码风格一致""
+    ]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的输出正确：ok 判断合理（描述信息充分），reasoning 自洽，missing_items 准确（无缺失），suggestions 有效且无强制表述。""
+}",true,true,true,评审 Bot 的输出正确：ok 判断合理（描述信息充分），reasoning 自洽，missing_items 准确（无缺失），suggestions 有效且无强制表述。
+655,[docs](fix) Add multi-dim tensor slicing chapter in programming guide,[docs],closed,document,2026-06-17T16:13:06Z,"
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 10,
+    ""reasoning"": ""PR 描述体仅包含模板注释和复选框，没有任何实际内容描述变更内容、原因或测试方法。虽然标题指明了增加文档章节，但缺乏足够细节（如具体修改了哪些文件、如何验证、是否影响现有文档等），维护者无法据此开始审查。"",
+    ""summary"": ""描述体完全为模板，无有效信息"",
+    ""missing_items"": [
+        ""缺失变更内容摘要"",
+        ""缺失测试或验证方法"",
+        ""缺失相关 issue 或背景说明""
+    ],
+    ""suggestions"": [
+        ""请在模板下方编写具体的 Summary 段落，说明添加多维张量切片章节的目的和主要内容"",
+        ""补充是否经过本地构建或预览验证的说明"",
+        ""若该 PR 由某个 issue 驱动，请引用该 issue""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""整体审核通过，评审Bot的判断、理由、缺失项和建议均合理。""
+}",true,true,true,整体审核通过，评审Bot的判断、理由、缺失项和建议均合理。
+653,[ssbuffer](fix) identify bufferization.alloc_tensor op in MemoryEffec…,[ssbuffer],merged,release,2026-06-17T11:50:10Z,"…tsTracker
+
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""PR描述几乎为空：标题被截断，仅显示部分信息；描述体只包含了模板的占位符文本和未勾选的复选框，没有填写任何实际变更描述、测试计划或相关动机。维护者无法从中理解该PR的目的、改动内容及验证方式。"",
+    ""summary"": ""描述中无实质性内容，仅包含未填写的模板框架。"",
+    ""missing_items"": [""变更的详细描述"", ""测试计划或验证方法"", ""相关Issue或动机说明""],
+    ""suggestions"": [""明确写出该修复的具体内容（如bufferization.alloc_tensor op为何需要识别）"", ""说明如何测试该改动（例如新增了哪些测试用例）"", ""如果有跟踪的Issue，请关联以便追溯背景""]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的判断合理，描述确实缺失关键信息；推理自洽；建议有效且无强制表述；缺失项准确。""
+}",true,true,true,评审 Bot 的判断合理，描述确实缺失关键信息；推理自洽；建议有效且无强制表述；缺失项准确。
+648,[ControlFlowOpt](fix) enhance CFO generalization ability,[ControlFlowOpt],merged,release,2026-06-17T09:17:05Z,"## Summary
+
+This PR adds follow-up fixes for complex control-flow pointer handling in the Ascend backend, solving unreachable CFG return blocks, scalar tensor-pointer offsets, zero tensor helper functions, and nested loop pointer results yielded through an outer `scf.if`.
+
+A representative case is:
+
+```python
+if cond:
+    for _ in range(n):
+        ptr = tl.advance(ptr, [step0])
+        tl.store(ptr, src)
+else:
+    for _ in range(n):
+        ptr = tl.advance(ptr, [step1])
+        tl.store(ptr, src)
+
+out = tl.load(ptr)
+```
+
+The important point is that the selected pointer after the `if` must carry the loop-updated offset, not the initial pointer offset observed during planning.
+
+Related to #148 and follows up the complex control-flow support in #134.
+
+## Changes
+
+- Removes unreachable CFG blocks before CFG-to-SCF structuring, avoiding failures from dead terminal-return blocks.
+- Preserves scalar tensor-pointer offsets when a tensor pointer is represented as a stable vector offset plus a scalar loop-carried offset.
+- Extends `scf.if` planning for nested `scf.for` results so loop-carried pointer offsets are explicitly yielded through the parent `if`.
+- Handles both tensor pointer and block pointer offset components in nested-loop `if` results.
+- Inlines private zero-tensor helper functions before Triton-to-Linalg use analysis and conversion, so helper calls do not survive into later lowering.
+
+## Impact
+
+- Fixes correctness issues where nested loop pointer updates inside `if` branches were dropped when the pointer result was used after the branch merge.
+- Improves robustness for complex control-flow memory access patterns generated by Triton kernels.
+- Avoids unnecessary failures on dead CFG blocks emitted by frontend/lowering paths.
+","{
+    ""ok"": true,
+    ""score"": 80,
+    ""reasoning"": ""PR描述非常详细，清晰说明了修改背景、具体改动、影响以及关联Issue，使得维护者能够理解技术内容和修复目标。但缺少明确的测试验证说明（如是否添加了测试用例、如何验证修复正确性），这虽是重要信息，但描述本身已足够让维护者开始审查代码，因此判定为基本合规，建议补充测试信息以提升完整性。"",
+    ""summary"": ""描述丰富具体，但缺少测试验证说明"",
+    ""missing_items"": [""缺失测试验证说明""],
+    ""suggestions"": [""建议补充测试计划或说明为何不需要测试（例如：已有回归测试覆盖、通过现有测试套件验证等）""]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，描述信息充分清晰；missing_items准确指出缺失测试说明；建议具体可执行且无强制表述；reasoning自洽。整体审核通过。""
+}",true,true,true,评审Bot的ok判断合理，描述信息充分清晰；missing_items准确指出缺失测试说明；建议具体可执行且无强制表述；reasoning自洽。整体审核通过。
+642,[ssbuffer](fix) ancestor walk for checking forOp ssbuffer.main_loop,[ssbuffer],open,release,2026-06-17T06:55:39Z,"…ow for scf.if-wrapped ops
+
+Commit 103fa734 fixed parentOpHasMainLoopAttr to walk the ancestor chain when checking for ssbuffer.main_loop, but addPollingControlFlow still used cast<scf::ForOp>(getParentOp()) which crashes when wait ops are nested inside scf.if blocks within scf.for. Also the OpBuilder insertion point used the nested waitOp's iterator directly, causing cross-block iterator violation.
+
+Fixes:
+- parentOpHasMainLoopAttr: walk ancestor chain (from 103fa734)
+- findEnclosingForOp: new helper to find enclosing scf::ForOp
+- findAnchorInForBody: new helper for safe insertion point in forOp body
+- addPollingControlFlow: use findEnclosingForOp + findAnchorInForBody
+
+Verified with interCoreBufNum=2: all 3 steps complete successfully.
+
+Co-Authored-By: DeLong code
+
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 85,
+    ""reasoning"": ""描述清晰地解释了问题背景（commit 103fa734的修复存在两个问题）、列出四个具体的修复点（parentOpHasMainLoopAttr、findEnclosingForOp、findAnchorInForBody、addPollingControlFlow），并提供了验证结果（interCoreBufNum=2三步完成）。虽然未提供详细的测试步骤或测试文件路径，但整体信息足以让维护者理解变更内容和验证方式，符合要求。"",
+    ""summary"": ""描述详细说明了修复的内容和验证结果，信息完整。"",
+    ""missing_items"": [],
+    ""suggestions"": []
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的输出合理，PR描述信息充分，ok=true判断正确；reasoning与判断一致且自洽；missing_items为空且准确；suggestions为空，不需额外建议，故有效。""
+}",true,true,true,评审Bot的输出合理，PR描述信息充分，ok=true判断正确；reasoning与判断一致且自洽；missing_items为空且准确；suggestions为空，不需额外建议，故有效。
+639,[TritonToLinalg](fix) make strided axis coalescing more generic,[TritonToLinalg],merged,release,2026-06-17T04:46:12Z,"make axis_coalescing more generic and accelerate comba and gdn_gate by 5 times using axis_coalescing and make  。
+
+1. accelerating 
+ gdn_gate | 1D 37.86us → coalesce 8.15us = 4.6×
+ comba |  254us -> 40 us
+
+2. generalization 
+
+<img width=""1679"" height=""843"" alt=""1781671543035"" src=""https://github.com/user-attachments/assets/98d58c6c-7158-4548-9cc9-b3d38eb1e16d"" />
+
+
+
+
+",,false,,,,,
+638,[Docs](fix) modify op constraints and examples for Reduction Ops,[Docs],merged,document,2026-06-17T04:13:03Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""PR描述仅包含模板占位符和空白复选框，没有填写任何实质性的变更描述、动机解释或测试验证信息。标题虽然指出是文档修改，但缺乏具体内容，维护者无法仅凭标题了解修改细节。描述信息严重不足，无法支持有效的审查。"",
+    ""summary"": ""描述空白，只有模板框架，没有实际内容。"",
+    ""missing_items"": [
+        ""缺失变更内容的详细描述"",
+        ""缺失变更原因或动机说明"",
+        ""缺失测试验证或审查计划""
+    ],
+    ""suggestions"": [
+        ""建议在描述中具体说明修改了哪些Reduction算子的约束和示例，以及修改的原因和影响。"",
+        ""建议说明是否已经进行文档审查或验证，或者补充测试计划（如没有增加测试也请明确理由）。""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的判断合理：PR 描述仅有模板框架，无实质内容，ok=false 正确；reasoning 逻辑自洽；missing_items 准确反映了缺失项；suggestions 具体可执行且无强制表述。""
+}",true,true,true,评审 Bot 的判断合理：PR 描述仅有模板框架，无实质内容，ok=false 正确；reasoning 逻辑自洽；missing_items 准确反映了缺失项；suggestions 具体可执行且无强制表述。
+625,[Sync](from dev): backport keep dynamic strided access on SIMD path (#586) fixes to release/3.2.2,[Sync],closed,release,2026-06-16T13:14:46Z,"## Summary
+This PR cherry-picks 1 commit from the release/3.2.2-dev branch into release/3.2.2 .
+## Included Commits
+- TritonToLinalg keep dynamic strided access on SIMD path (#586)
+Commit: 925675e09a73fbc6292b1807024afbacaf0a579f",,false,,,,,
+613,[docs](fix) Add device_print runtime output example in debug guide,[docs],merged,document,2026-06-16T08:25:26Z,"添加 调试文档中 device print的运行示例
+相关issue： https://github.com/triton-lang/triton-ascend/issues/336
+<img width=""1649"" height=""713"" alt=""image"" src=""https://github.com/user-attachments/assets/de2bb0a5-7842-4ccf-b335-1a3298d91d34"" />",,false,,,,,
+600,[PtrAnalysis](fix) Fix the negative index calculate for reinterpret_cast,[PtrAnalysis],open,release,2026-06-15T13:00:18Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 35,
+    ""reasoning"": ""提交的描述完全由模板注释和未填写的复选框组成，没有提供任何关于更改的具体说明、测试方法或相关背景信息。虽然标题指明了修复方向（PtrAnalysis 中 reinterpret_cast 的负索引计算），但缺乏实际描述，维护者无法了解问题细节、实现方式或验证情况，不符合最低信息要求。"",
+    ""summary"": ""描述仅包含模板占位符，无实质内容，信息严重不足"",
+    ""missing_items"": [
+        ""变更内容的具体描述"",
+        ""修复方法的解释"",
+        ""测试计划或验证方式"",
+        ""相关问题或 issue 链接（若有）""
+    ],
+    ""suggestions"": [
+        ""补充一段说明，解释 negative index calculate 的具体错误场景和修复方式"",
+        ""说明是否已有测试覆盖，或新增的测试如何验证修复"",
+        ""如果有关联 issue，请引用以便追踪""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的 ok 判断合理，因为描述确实无实质内容；reasoning 自洽；suggestions 具体且无强制表述；missing_items 准确列出了缺失的关键信息。""
+}",true,true,true,评审 Bot 的 ok 判断合理，因为描述确实无实质内容；reasoning 自洽；suggestions 具体且无强制表述；missing_items 准确列出了缺失的关键信息。
+589,[compiler](feat) Make printed tools command lines copy-pastable,[compiler],merged,,2026-06-15T05:15:23Z,"Make triton-opt and bishengir-compile command lines printed with TRITON_DEBUG=1 copy-pastable. Specifically:
+1. If TRITON_DUMP_DIR is set, print file names from dump dirs, not from /tmp.
+2. Escape printed options
+
+Fixes #411
+
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 80,
+    ""reasoning"": ""标题明确标识了变更类型和功能描述，描述部分提供了具体的两点改进说明并关联了 issue #411，信息足以让维护者理解变更意图。虽然缺少明确的测试计划，但变更较为简单且描述清晰，不影响基本审查。"",
+    ""summary"": ""标题和描述充分传达了变更内容，测试信息虽未明确提及但非必须，整体合规。"",
+    ""missing_items"": [],
+    ""suggestions"": [""建议在描述中补充测试验证方式，例如说明如何验证命令行为可复制粘贴，或添加相关测试用例。""]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理（描述信息充分），reasoning自洽，suggestions有效且无强制表述，missing_items正确为空。整体审核通过。""
+}",true,true,true,评审Bot的ok判断合理（描述信息充分），reasoning自洽，suggestions有效且无强制表述，missing_items正确为空。整体审核通过。
+578,[docs](fix) Clarify the source branch,[docs],open,document,2026-06-15T00:22:26Z,,"{
+    ""ok"": true,
+    ""score"": 85,
+    ""reasoning"": ""标题清晰地说明了变更类型（docs fix）和内容（澄清源分支），对于文档修复类PR，空描述也可以理解变更意图，因此判定为合规。"",
+    ""summary"": ""标题清晰，空描述可接受"",
+    ""missing_items"": [],
+    ""suggestions"": [""建议在描述中补充变更的详细说明，比如具体修改了哪些文档、澄清了什么内容、是否需要相关测试等，以便于维护者更高效地评审。""]
+}",true,,error,error,error,parse error: 
+567,[Docs](fix) Update memory ops documentation examples and constraints,[Docs],merged,document,2026-06-12T10:11:34Z,"## Summary
+Refine documentation examples and platform constraints for Triton memory operations.
+This change covers seven core memory APIs (`tl.load`, `tl.store`,
+`tl.make_block_ptr`, `tl.advance`, `tl.make_tensor_descriptor`,
+`tl.load_tensor_descriptor`, `tl.store_tensor_descriptor`).
+﻿
+All example scripts are standardized with the following improvements:
+- Rewrite and simplify test logic to eliminate redundant calculation
+- Uniform kernel docstring style with clear step-by-step workflow
+- Provide self-contained, fully runnable test entries
+﻿
+Meanwhile, Ascend-specific constraint descriptions are unified and polished to consistent technical English, accurately recording hardware limitations and usage specifications of memory access APIs.
+
+## User Impact
+No code behavior change. This PR only updates documentation examples and
+constraint metadata.
+
+## Document Render Preview
+Example: triton.language.load
+<img width=""1177"" height=""751"" alt=""image"" src=""https://github.com/user-attachments/assets/ced90c9d-5a98-48e1-b1ad-29a1bb30a130"" />
+
+## CheckList
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+- [x] I have written a PR description following these
+	[rules](https://cbea.ms/git-commit/#why-not-how).
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+- Select one of the following.
+	- [x] This PR does not need a test because it only updates documentation examples and constraint metadata.
+	- [ ] I have added tests.
+		- `/python/test` for end-to-end tests
+- Select one of the following.
+	- [x] I have not added any `lit` tests.
+	- [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+		including the ""tests should be minimal"" section. (Usually running Python code
+		and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 85,
+    ""reasoning"": ""该PR描述详细说明了变更内容（涉及七种核心内存API的文档示例和约束描述改进），明确了用户影响（无代码变更），提供了文档渲染预览截图，并解释了无需测试的原因。信息充分，维护者可清晰理解变更范围。"",
+    ""summary"": ""描述清晰，包含变更总结、具体改进点、用户影响、文档预览，信息完整。"",
+    ""missing_items"": [],
+    ""suggestions"": [""可以进一步关联相关issue或讨论链接，以提供变更背景参考。""]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，reasoning自洽，suggestions有效，missing_items准确。描述充分，评审输出正确。""
+}",true,true,true,评审Bot的ok判断合理，reasoning自洽，suggestions有效，missing_items准确。描述充分，评审输出正确。
+555,[ssbuffer](feat) add memory dependency analysis and sync insertion in SplitDataflow,[ssbuffer],merged,release,2026-06-12T07:09:30Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""描述体仅包含 PR 模板的注释和未填写的复选框，没有任何实质性内容（如变更原因、实现细节、测试方法等）。虽然标题明确指出了具体功能（在 SplitDataflow 中添加内存依赖分析和同步插入），但整体提供的信息极度匮乏，维护者无法仅凭标题理解该 PR 的完整意图和验证方法。根据核心原则，这样的描述对审查者是无用的，必须标记为非合规。"",
+    ""summary"": ""描述仅含模板占位符，未提供任何有价值的变更细节，信息严重不足"",
+    ""missing_items"": [
+        ""缺失对变更的详细说明（为什么需要此举、实现方式）"",
+        ""缺失测试计划或验证方法"",
+        ""缺失相关 issue 或背景参考""
+    ],
+    ""suggestions"": [
+        ""在描述中简要解释此 PR 的目的和动机"",
+        ""描述如何实现内存依赖分析和同步插入，以及预期效果"",
+        ""补充测试方式，说明如何验证该功能的正确性""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理（描述为空模板，缺乏关键信息），reasoning自洽且与score一致，suggestions具体可执行且无强制表述，missing_items准确反映了确实缺失的内容。整体审核通过。""
+}",true,true,true,评审Bot的ok判断合理（描述为空模板，缺乏关键信息），reasoning自洽且与score一致，suggestions具体可执行且无强制表述，missing_items准确反映了确实缺失的内容。整体审核通过。
+544,[release3.2.2](sync) Sync release/3.2.2-dev to release/3.2.2,[release3.2.2],merged,release,2026-06-11T12:52:31Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 80,
+    ""reasoning"": ""标题明确传达了这是一个从 release/3.2.2-dev 到 release/3.2.2 的分支同步（sync）操作，对于此类简单合并/同步 PR，标题本身已足够说明目的和范围。描述虽仅包含模板占位符而无实质内容，但不影响对 PR 意图的理解。评分 80：信息基本完整，能开始审查。"",
+    ""summary"": ""标题清晰表明同步操作，描述无需额外细节。"",
+    ""missing_items"": [],
+    ""suggestions"": [""如果同步过程中有任何冲突解决或额外修改，可以在描述中简要说明，以增加透明度。""]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，因为标题充分说明了同步操作目的；reasoning自洽；suggestions有效且无强制表述；missing_items为空符合实情。整体评审输出正确。""
+}",true,true,true,评审Bot的ok判断合理，因为标题充分说明了同步操作目的；reasoning自洽；suggestions有效且无强制表述；missing_items为空符合实情。整体评审输出正确。
+530,[ci](feat) label restricted file changes,[CI],merged,CICD,2026-06-11T04:01:23Z,"## Summary
+- Add a dedicated `pull_request_target` workflow that labels PRs changing files outside repository-construction paths.
+- Allowed directories: `.github/`, `docker/`, `docs/`, `third_party/`.
+- Allowed root files: `.readthedocs.yaml`, `CONTRIBUTING.md`, `CONTRIBUTING_zh.md`, `README.md`, `README_zh.md`, `RELEASE.md`, `SECURITYNOTE.md`, `SECURITYNOTE_zh.md`, `requirements.txt`, `requirements_dev.txt`, `safe_compile.cmake`.
+- Use the GitHub PR files API without checking out or executing fork code.
+
+## Behavior
+- If a PR changes files outside the allowed paths, the workflow applies the `restricted-files` label and exits successfully.
+- If all changed files are within the allowed paths, the workflow removes `restricted-files` when present and exits successfully.
+- The workflow is split into scan/apply/remove steps so each task has a single responsibility.
+
+## Review feedback addressed
+- Use the default `pull_request_target` activity types instead of listing unnecessary types.
+- Move `SECURITYNOTE.md`, `SECURITYNOTE_zh.md`, and `safe_compile.cmake` to the allowed-file list.
+- Remove duplicate allowed path printing from the success branch.
+- Remove the separate `restricted_files` list; the rule is now based only on allowed directories and files.
+- Split the workflow by function: scan changed files, apply label, remove label.
+- Grant `pull-requests: write` so the labeler can update PR labels.
+
+## Validation
+- Parsed the workflow YAML locally with PyYAML.
+- Ran `bash -n` against each workflow shell step.
+- Ran `pre-commit run check-yaml --files .github/workflows/protected-files-check.yml` successfully.
+- Ran `git diff --check` successfully.
+- Verified in the personal fork:
+  - PR #3 changes `.pre-commit-config.yaml` and receives `restricted-files`.
+  - PR #4 changes only `docs/` and does not receive `restricted-files`.","{
+    ""ok"": true,
+    ""score"": 95,
+    ""reasoning"": ""描述详细说明了变更目的（添加新的 CI workflow 用于标记修改受限文件的 PR）、具体行为逻辑、所允许的路径和文件列表、审查反馈的改进点以及多项验证手段（本地 YAML 解析、shell 语法检查、pre-commit 检查、个人 fork 测试验证）。信息量充分，维护者能直接理解变更内容并开始审查。模板中的必填项目虽未显式勾选，但描述本身已足够清晰，符合评估准则中的灵活判断原则。"",
+    ""summary"": ""PR描述内容完整，包含变更总结、行为说明、审查反馈处理和验证方式，具备良好可审查性。"",
+    ""missing_items"": [],
+    ""suggestions"": []
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok=true判断合理，PR描述信息充分，missing_items为空准确，suggestions为空合理，reasoning自洽。整体评审正确。""
+}",true,true,true,评审Bot的ok=true判断合理，PR描述信息充分，missing_items为空准确，suggestions为空合理，reasoning自洽。整体评审正确。
+529,[API](fix) Remove Ascend private param care_padding from tl.load,[API],merged,,2026-06-11T03:58:09Z,"## Summary
+This PR removes the `care_padding` parameter from `tl.load`, which was an Ascend-local extension not present in upstream.
+
+Before this change, `tl.load` had an extra `care_padding` parameter (default `True`) that automatically filled masked-out positions with zeros when `mask` was provided but `other` was not:
+
+```python
+# Ascend-local signature (before)
+def load(pointer, mask=None, other=None, ..., care_padding=True, _semantic=None):
+```
+
+```python
+# semantic.py _load_legacy (before) — auto-fill other=0 when mask present
+if mask is not None and other is None and care_padding:
+    elt_ty = ptr.type.scalar.element_ty
+    default_value = 0.0 if elt_ty.is_floating() else 0
+    other = self.to_tensor(default_value)
+```
+
+After this PR, the signature and behavior match upstream exactly:
+
+```python
+# Aligned with upstream (after)
+def load(pointer, mask=None, other=None, ..., _semantic=None):
+```
+
+## Why this rollback is safe
+
+### The auto-fill behavior was redundant
+
+The `care_padding=True` logic did exactly one thing: when `mask is not None and other is None`, it set `other = 0` (or `0.0`). Users can achieve the identical result by explicitly passing `other=0`:
+
+```python
+# Before: implicit zero-fill via care_padding=True (default)
+x = tl.load(ptr, mask=mask)
+
+# After: equivalent behavior, explicit
+x = tl.load(ptr, mask=mask, other=0)
+```
+
+### No behavioral change for existing code
+
+| Call pattern | Before (care_padding=True) | After (removed) |
+|---|---|---|
+| `tl.load(ptr)` | normal load | normal load (unchanged) |
+| `tl.load(ptr, mask=mask, other=val)` | loads `val` on mask miss | loads `val` on mask miss (unchanged) |
+| `tl.load(ptr, mask=mask)` | auto-fills `0` on mask miss | loads `None` on mask miss → **potential difference** |
+
+For the third case — `tl.load` with `mask` but without `other` — Triton's upstream behavior (and now Ascend's) passes `None` as `other` to `create_masked_load`. The backend is expected to handle `other=None` appropriately (e.g., by not caring about the value at masked positions). If any existing kernel code relied on the implicit zero-fill, it should be updated to pass `other=0` explicitly.
+
+### Aligned with upstream semantics
+
+Upstream has never had `care_padding`. The parameter was introduced as a local Ascend extension. Removing it eliminates the divergence and makes future upstream merges smoother.
+
+## User Impact
+
+Kernels that use `tl.load(ptr, mask=mask)` without an explicit `other=` argument and rely on implicit zero-filling at masked positions may need a trivial update:
+
+```python
+# If your kernel does this:
+x = tl.load(ptr, mask=mask)
+
+# And relies on x[masked] == 0, update to:
+x = tl.load(ptr, mask=mask, other=0)
+```
+
+For all other usage patterns, there is no change in behavior or performance.
+
+## CheckList
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+- [x] I have written a PR description following these
+	[rules](https://cbea.ms/git-commit/#why-not-how).
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+- Select one of the following.
+	- [x] This PR does not need a test because it removes a local extension and aligns with upstream; existing tests cover the core load path.
+	- [ ] I have added tests.
+		- `/python/test` for end-to-end tests
+- Select one of the following.
+	- [x] I have not added any `lit` tests.
+	- [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+		including the ""tests should be minimal"" section. (Usually running Python code
+		and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 95,
+    ""reasoning"": ""描述非常详尽：清晰说明了移除的参数、行为变化、安全理由、与上游的对齐、用户影响及过渡方案。Checklist 部分也填写了必要声明。虽然未展示具体测试运行结果，但已解释不需要添加新测试的原因。整体信息完整，维护者可以直接开始审查。"",
+    ""summary"": ""变更描述充分，包含动机、影响分析和过渡指南，达到合规标准。"",
+    ""missing_items"": [],
+    ""suggestions"": [
+        ""考虑在描述中补充运行现有测试套件的确认结果，以进一步提升信心。""
+    ]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的判断合理：PR 描述详尽清晰，ok 应为 true；reasoning 与判断一致且自洽；suggestions 是建设性补充，无强制表述；missing_items 为空符合实际情况。整体审核无误。""
+}",true,true,true,评审 Bot 的判断合理：PR 描述详尽清晰，ok 应为 true；reasoning 与判断一致且自洽；suggestions 是建设性补充，无强制表述；missing_items 为空符合实际情况。整体审核无误。
+506,[CI](chore) Sync CI from the main branch,[CI],closed,"CICD,release",2026-06-10T02:36:45Z,"This is used to synchronize the ci changes of the main branch:
+
+- [x] - https://github.com/triton-lang/triton-ascend/pull/273
+- [x] - https://github.com/triton-lang/triton-ascend/pull/256
+- [x] - https://github.com/triton-lang/triton-ascend/pull/227
+- [x] - https://github.com/triton-lang/triton-ascend/pull/353
+- [x] - https://github.com/triton-lang/triton-ascend/pull/385
+- [x] - https://github.com/triton-lang/triton-ascend/pull/428","{
+    ""ok"": true,
+    ""score"": 78,
+    ""reasoning"": ""标题和描述共同说明了该PR用于同步主分支的CI变更，并提供了具体的PR引用，使维护者能够追溯变更内容。但描述缺少对变更本身的总结性说明以及测试验证方式，对于快速评审略显不足。考虑到CI类变更通常通过现有的CI流水线验证，且引用完整，基本信息足够，故判定为合规。"",
+    ""summary"": ""描述通过PR列表说明了同步的CI变更，但未明确给出该PR自身的变更总结及验证方法。"",
+    ""missing_items"": [""缺失测试验证方式的描述""],
+    ""suggestions"": [""建议简要说明如何验证同步的正确性，例如：运行完整的CI套件确认所有任务通过，或描述测试步骤。""]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，reasoning自洽，suggestions具体可执行且无强制表述，missing_items准确指出缺失的测试验证描述，整体审核正确。""
+}",true,true,true,评审Bot的ok判断合理，reasoning自洽，suggestions具体可执行且无强制表述，missing_items准确指出缺失的测试验证描述，整体审核正确。
+481,"Revert ""[CFO](fix) fix CFG structuring and preserve scalar tensor pointer offsets""",[Misc],merged,release,2026-06-08T12:03:57Z,Reverts triton-lang/triton-ascend#443,"{
+    ""ok"": false,
+    ""score"": 65,
+    ""reasoning"": ""标题明确是回退某个具体 PR，描述也提供了引用的 PR 编号，维护者可以知道被回退的变更内容。但缺少回退的原因说明（如该 PR 引入了回归或存在冲突）以及任何测试验证信息。对于回退操作，维护者需要了解回退的动机和回调后的状态，当前描述过于简短，导致信息不充分。"",
+    ""summary"": ""描述仅提及回退目标，未说明回退原因和验证方式，信息不足以支持维护者快速判断与合并。"",
+    ""missing_items"": [""缺失回退原因说明"", ""缺失测试验证方法""],
+    ""suggestions"": [
+        ""可以考虑补充回退该 PR 的具体原因，例如该变更破坏了哪些功能或测试"",
+        ""建议注明回退后是否已通过基本测试或 CI 验证""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，因为回退PR缺乏原因说明；reasoning自洽；suggestions有效且无强制表述；missing_items准确反映了关键缺失信息。""
+}",true,true,true,评审Bot的ok判断合理，因为回退PR缺乏原因说明；reasoning自洽；suggestions有效且无强制表述；missing_items准确反映了关键缺失信息。
+455,fix(autoblockify): disable autoblockify when sync_block_lock/unlock operations are inserted,[Misc],merged,"build,release",2026-06-05T08:05:20Z,"fix(autoblockify): disable autoblockify when sync_block_lock/unlock operations are inserted
+
+fix issues caused by both sync_block_lock and auto_blockify enabled.
+sync_block_lock/unlock are used for atomic operations, while auto-blockify requirest  that the kernel is able to run parallelly.  As a result, we are supposed to disable auto-blockify if we inserted sync_block_lock/unlock operations in the IR.
+
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 65,
+    ""reasoning"": ""描述解释了问题的原因（sync_block_lock与auto_blockify冲突）和解决方案（禁用auto_blockify），但完全没有提及测试方法或验证手段，也未选择是否添加测试。模板中的测试部分全部留空，导致维护者无法确认修改是否经过了验证，信息完整性不足。"",
+    ""summary"": ""提供了问题的背景和修改逻辑，但缺乏测试验证信息，无法让维护者直接开始审查。"",
+    ""missing_items"": [""测试验证方法或说明""],
+    ""suggestions"": [""在描述中补充测试计划，例如运行哪些现有测试或新增测试的路径"", ""如果认为不需要测试，请明确写出理由并替换‘FILL THIS IN’""]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok判断合理，描述缺少测试验证关键信息；reasoning自洽，与ok判断一致；suggestions具体可执行且无强制表述；missing_items准确。""
+}",true,true,true,评审Bot的ok判断合理，描述缺少测试验证关键信息；reasoning自洽，与ok判断一致；suggestions具体可执行且无强制表述；missing_items准确。
+423,[docs]: Add community governance guidelines,[docs],merged,document,2026-06-04T02:57:15Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 30,
+    ""reasoning"": ""PR描述仅包含模板占位符和未勾选的复选框，没有用户撰写的任何实际内容。标题虽表明添加社区治理指南，但无法从中了解变更的动机、具体内容、影响范围以及是否进行了任何验证。测试部分依赖于“FILL THIS IN”，缺乏明确的说明。整体信息严重不足，维护者无法据此开始评审。"",
+    ""summary"": ""描述实质为空，仅保留模板结构，缺少变更详情和测试说明。"",
+    ""missing_items"": [""变更内容描述（动机、范围、概要）"", ""测试说明或不需要测试的理由""],
+    ""suggestions"": [""建议在描述中解释为何需要添加社区治理指南，以及这些指南的来源或参考。"", ""建议简要列出指南的核心内容或链接到相关文档。"", ""建议明确测试框的选择，如果无需测试则说明为何无需测试。""]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的判断合理：描述只有模板占位符，无实质内容，ok=false正确；reasoning自洽地解释了信息严重不足；suggestions具体且无强制表述，符合改进要求。missing_items列出的缺失项也确实缺少。整体评审输出正确。""
+}",true,true,true,评审Bot的判断合理：描述只有模板占位符，无实质内容，ok=false正确；reasoning自洽地解释了信息严重不足；suggestions具体且无强制表述，符合改进要求。missing_items列出的缺失项也确实缺少。整体评审输出正确。
+392,Sync/release 3.2.2 dev to 3.2.2,[Misc],merged,"build,release,document",2026-06-02T13:32:12Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 20,
+    ""reasoning"": ""标题指出了分支同步，但描述完全由模板占位符组成，没有填写任何实际变更内容、目的或测试验证信息。维护者无法了解该 PR 的具体变更和是否经过测试，属于信息严重不足，无法开始审阅。"",
+    ""summary"": ""描述仅包含模板占位符，无实际内容，不符合合入要求"",
+    ""missing_items"": [
+        ""实际的变更总结（Summary）"",
+        ""测试或验证方法"",
+        ""是否解决了冲突或进行了什么同步操作""
+    ],
+    ""suggestions"": [
+        ""请简要说明同步了哪些提交，是否涉及冲突解决或其他变更"",
+        ""描述中可提供验证方式，例如通过本地构建或 CI 确认同步正确"",
+        ""如果不需要测试，也请明确说明原因（如纯版本号同步等）""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok=false判断合理，描述仅有模板占位符无实质内容；reasoning自洽地指出了信息缺失；missing_items准确列出实际缺失项；suggestions具体且无强制表述，均为有效改进建议。""
+}",true,true,true,评审Bot的ok=false判断合理，描述仅有模板占位符无实质内容；reasoning自洽地指出了信息缺失；missing_items准确列出实际缺失项；suggestions具体且无强制表述，均为有效改进建议。
+368,[task7] decouple launcher restack 2: remove launcher PCH,[task7],open,release,2026-06-01T14:39:27Z,Task7 code-level restack commit 2.,"{
+    ""ok"": false,
+    ""score"": 40,
+    ""reasoning"": ""标题虽然提到了移除 launcher PCH，但描述仅重复了标题内容（'Task7 code-level restack commit 2.'），未提供任何具体变更细节、原因、影响范围或测试方法。该描述长度不足且信息量极低，维护者无法据此理解 PR 的实际改动和验证方式。"",
+    ""summary"": ""描述过于简短，缺少变更动机、具体做法和测试验证，无法支持评审。"",
+    ""missing_items"": [
+        ""缺失变更的具体说明"",
+        ""缺失变更原因或动机"",
+        ""缺失测试方案或验证方式""
+    ],
+    ""suggestions"": [
+        ""补充移除 PCH 的具体改动（哪部分代码、如何替代）"",
+        ""解释为何需要进行这一重构步骤（例如编译速度、依赖管理）"",
+        ""说明测试覆盖情况，例如是否通过已有测试或新增了测试""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的判断合理，描述内容过于简短，缺失关键信息，ok=false 符合实际情况；缺失项准确对应缺失信息；建议具体且无强制性表述；推理自洽。""
+}",true,true,true,评审 Bot 的判断合理，描述内容过于简短，缺失关键信息，ok=false 符合实际情况；缺失项准确对应缺失信息；建议具体且无强制性表述；推理自洽。
+344,feat(ssbuffer): add Quantization Pattern to fixpipe opt,[Misc],merged,release,2026-06-01T02:00:59Z,"
+Extends the FixpipeOptPass to recognize a second fixpipe-eligible pattern — the Quantization Pattern — in addition to the existing Cast Pattern.
+
+Support for:
+```
+linalg.matmul → arith.mulf (scalar-like scaling factor) → tensor.extract_slice (optional) → materialize_in_destination(subview(gm))
+```
+
+# New contributor declaration
+- [x] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [x] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [x] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [x] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [x] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": true,
+    ""score"": 85,
+    ""reasoning"": ""描述内容明确了扩展FixpipeOptPass以支持Quantization Pattern，并给出了支持的模式转换链。测试勾选框已标记，表明已添加测试（lit/unittest/end-to-end）。虽然缺少更详细的背景动机和具体测试文件信息，但整体上足以让维护者理解PR意图。评分85。"",
+    ""summary"": ""PR描述提供了实质性变更说明和测试标记，信息基本完整。"",
+    ""missing_items"": [],
+    ""suggestions"": [
+        ""建议在描述中简短说明添加Quantization Pattern的动机（如性能优势或常见场景）。"",
+        ""如果可能，列出具体测试文件或测试命令，以便审阅者更容易定位和验证。""
+    ]
+}",true,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的 ok 判断合理，reasoning 自洽，suggestions 有效且无强制表述，missing_items 为空也准确，因为描述信息基本完整。总体评审正确。""
+}",true,true,true,评审 Bot 的 ok 判断合理，reasoning 自洽，suggestions 有效且无强制表述，missing_items 为空也准确，因为描述信息基本完整。总体评审正确。
+311,fix(ssbuffer): Add more specific kernels.,[Misc],merged,release,2026-05-29T06:11:37Z,"<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 10,
+    ""reasoning"": ""该PR描述为空，仅包含模板的HTML注释和未填写的复选框，没有任何实质性内容。标题“fix(ssbuffer): Add more specific kernels”虽然指出了变更方向，但未说明为什么需要这些更具体的kernel、具体添加了哪些、如何测试等关键信息。根据评分准则，描述严重不足，几乎无法开始审核。"",
+    ""summary"": ""描述为空，无实质性内容，无法理解变更意图和验证方式"",
+    ""missing_items"": [""缺失变更目的和具体说明"", ""缺失测试计划或验证方法"", ""缺失相关issue或上下文引用""],
+    ""suggestions"": [""请在描述中补充此PR的变更目标，如为何需要更具体的kernel、解决了什么性能或正确性问题"", ""提供测试覆盖方式，例如是否添加了单元测试/集成测试或现有测试通过"", ""如有关联issue，请在描述中引用""]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审Bot的ok=false判断合理，因为PR描述仅有模板无实质内容；理由自洽地说明了缺失项；建议具体且无强制性表述；missing_items所列项确实缺失。整体评审正确。""
+}",true,true,true,评审Bot的ok=false判断合理，因为PR描述仅有模板无实质内容；理由自洽地说明了缺失项；建议具体且无强制性表述；missing_items所列项确实缺失。整体评审正确。
+281,[TritonOp](revert) Revert custom cdiv op in triton language to use upstream community version,[TritonOp],merged,release,2026-05-27T12:26:07Z,"
+
+<!---
+The core Triton is a small number of people, and we receive many PRs (thank
+you!).  To help us review your code more quickly, **if you are a new
+contributor (less than 3 PRs merged) we ask that you complete the following
+tasks and include the filled-out checklist in your PR description.**
+
+Complete the following tasks before sending your PR, and replace `[ ]` with
+`[x]` to indicate you have done them.
+-->
+
+# New contributor declaration
+- [ ] I am not making a trivial change, such as fixing a typo in a comment.
+
+- [ ] I have written a PR description following these
+  [rules](https://cbea.ms/git-commit/#why-not-how).
+
+- [ ] I have run `pre-commit run --from-ref origin/main --to-ref HEAD`.
+
+- Select one of the following.
+  - [ ] I have added tests.
+    - `/test` for `lit` tests
+    - `/unittest` for C++ tests
+    - `/python/test` for end-to-end tests
+  - [ ] This PR does not need a test because `FILL THIS IN`.
+
+- Select one of the following.
+  - [ ] I have not added any `lit` tests.
+  - [ ] The `lit` tests I have added follow these [best practices](https://mlir.llvm.org/getting_started/TestingGuide/#filecheck-best-practices),
+    including the ""tests should be minimal"" section. (Usually running Python code
+    and using the instructions it generates is not minimal.)
+","{
+    ""ok"": false,
+    ""score"": 30,
+    ""reasoning"": ""标题虽然提及回退自定义 cdiv 操作到上游社区版本，但未说明回退的原因、影响范围及验证方式；描述主体完全为空，仅包含模板注释和未勾选的复选框，没有任何实际内容。对于回退这类变更，缺少背景说明和测试计划将导致维护者无法理解其必要性和风险，不符合有效沟通的要求。"",
+    ""summary"": ""描述为空，仅含模板标记，标题也缺乏足够的背景细节。"",
+    ""missing_items"": [""变更原因和背景说明"", ""回退影响描述"", ""测试计划或验证方式"", ""相关 issue 引用（若有）""],
+    ""suggestions"": [
+        ""请补充说明回退此自定义操作的具体原因，例如上游社区版本已经修复了哪些问题或提供了更好的实现。"",
+        ""描述回退对现有使用该自定义 op 的代码和行为的影响。"",
+        ""提供测试计划，例如是否运行了 lit/unittest/end-to-end 测试来保证无回归。"",
+        ""如果有关联的 issue 或讨论，请一并引用。""
+    ]
+}",false,"{
+    ""ok_reasonable"": true,
+    ""reasoning_valid"": true,
+    ""suggestions_valid"": true,
+    ""judge_reasoning"": ""评审 Bot 的 ok=false 合理，因为描述实际为空，仅含模板；reasoning 一致地解释了低分原因；suggestions 具体且无强制表述；missing_items 准确列出了缺失的关键信息。""
+}",true,true,true,评审 Bot 的 ok=false 合理，因为描述实际为空，仅含模板；reasoning 一致地解释了低分原因；suggestions 具体且无强制表述；missing_items 准确列出了缺失的关键信息。
