@@ -642,7 +642,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="E2E scenario test for Issue and PR review bots"
     )
-    parser.add_argument("--repo", default="triton-lang/triton-ascend",
+    parser.add_argument("--repo", default="ai-infra-develop/triton-ascend",
                         help="GitHub repo (owner/name)")
     parser.add_argument("--mode", default="all",
                         choices=["issue", "pr", "all"],
