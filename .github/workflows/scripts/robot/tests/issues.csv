@@ -1026,7 +1026,7 @@ cann9.0.0","{
     ""summary"": ""标题和描述清晰表达了关于 triton-ascend 发布计划的讨论需求，符合 Others 模板要求。"",
     ""missing_items"": [],
     ""suggestions"": []
-}",true,,error,error,error,parse error: 
+}",true,,error,error,error,"parse error: "
 473,[ssbuffer] allocmulticache pass fails to attach “ssbuffer.crossdeps” attribute on cross-core data dependency,[ssbuffer],open,bug,2026-06-08T07:36:38Z,"### Describe the bug
 
 fla中的算子nsa_bwd_kernel_dq和nsa_bwd_kernel_dkv在ssbuffer场景下，kernel中存在核间数据依赖，但是在allocmulticache pass处理后未能正确打上标签，导致后续pass出现不合理场景报错

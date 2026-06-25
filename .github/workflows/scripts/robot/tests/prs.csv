@@ -2003,7 +2003,7 @@ Complete the following tasks before sending your PR, and replace `[ ]` with
     ""summary"": ""标题清晰，空描述可接受"",
     ""missing_items"": [],
     ""suggestions"": [""建议在描述中补充变更的详细说明，比如具体修改了哪些文档、澄清了什么内容、是否需要相关测试等，以便于维护者更高效地评审。""]
-}",true,,error,error,error,parse error: 
+}",true,,error,error,error,"parse error: "
 567,[Docs](fix) Update memory ops documentation examples and constraints,[Docs],merged,document,2026-06-12T10:11:34Z,"## Summary
 Refine documentation examples and platform constraints for Triton memory operations.
 This change covers seven core memory APIs (`tl.load`, `tl.store`,
