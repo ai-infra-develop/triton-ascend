@@ -11,14 +11,14 @@ Modes:
 
 Usage:
     # Evaluate issues
-    python test_csv.py --mode issue --input issues.csv
+    python test_issues_csv.py --mode issue --input issues.csv
 
     # Evaluate PRs
-    python test_csv.py --mode pr --input prs.csv
+    python test_issues_csv.py --mode pr --input prs.csv
 
     # Judge existing evaluations
-    python test_csv.py --mode issue_judge --input issues.csv
-    python test_csv.py --mode pr_judge --input prs.csv
+    python test_issues_csv.py --mode issue_judge --input issues.csv
+    python test_issues_csv.py --mode pr_judge --input prs.csv
 
 Requires VLLM_BASE_URL / LLM_BASE_URL and VLLM_API_KEY / LLM_API_KEY
 environment variables (same as production).
@@ -27,35 +27,15 @@ environment variables (same as production).
 import argparse
 import csv
 import json
-import os
 import sys
-
-import regex as re
 import time
 from pathlib import Path
 
 # Add parent to path so we can import the step modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from lib.llm import call_llm
-from lib.prefix_map import PREFIX_TO_TYPE_KEY, extract_issue_type
 from lib.prompts import load_system_prompt
-from lib.templates import load_issue_template, load_pr_template
-
-JSON_FORMAT_INSTRUCTIONS = """Output strictly the following JSON format, no other text:
-{
-    "ok": true or false,
-    "score": integer 0-100,
-    "reasoning": "explanation of the score in English",
-    "summary": "one-line summary of the judgment",
-    "missing_items": ["missing item 1", "missing item 2"],
-    "suggestions": ["suggestion 1", "suggestion 2"]
-}
-Notes:
-- missing_items must only contain required fields that are actually absent
-- suggestions must only offer improvement advice; do NOT use "required/must" language
-- if missing_items is empty, ok must be true
-- output JSON only, no other text (no ```json markers)"""
-
+from lib.review import is_output_valid, parse_json_output, review, should_review, validate_result
 
 JUDGE_SYSTEM_PROMPT = """You are a review quality auditor.
 Your task is to audit whether another LLM (Review Bot)'s evaluation
@@ -159,107 +139,38 @@ def judge_row(row: dict, kind: str) -> dict:
         }
 
 
-def parse_json_output(text: str) -> dict:
-    json_match = re.search(r"\{[\s\S]*\}", text)
-    if json_match:
-        return json.loads(json_match.group(0))
-    raise ValueError(f"Could not extract JSON from LLM output: {text[:200]}")
-
-
-def is_output_valid(text: str) -> bool:
-    """Check if LLM output is parseable JSON (not truncated/malformed)."""
-    if not text or not text.strip():
-        return False
-    try:
-        parse_json_output(text)
-        return True
-    except (json.JSONDecodeError, ValueError):
-        return False
-
-
-def validate_result(data: dict) -> dict:
-    ok = bool(data.get("ok", False))
-    score = int(data.get("score", 0))
-    missing_items = data.get("missing_items", [])
-    if not isinstance(missing_items, list):
-        missing_items = []
-    suggestions = data.get("suggestions", [])
-    if not isinstance(suggestions, list):
-        suggestions = []
-    return {
-        "ok": ok,
-        "score": max(0, min(100, score)),
-        "reasoning": str(data.get("reasoning", "")),
-        "summary": str(data.get("summary", "")),
-        "missing_items": missing_items,
-        "suggestions": suggestions,
-    }
-
-
-def build_user_prompt(title: str, body: str, template_text: str,
-                      type_key: str, kind: str = "issue") -> str:
-    template_label = "PR Template" if kind == "pr" else "Issue Template"
-    return f"""### Task Background
-Target type: {kind}
-Description type: {type_key}
-
-### Reference Specification
-Detailed description specification (based on required fields in {template_label}):
-{template_text}
-
-### Data to Evaluate (UNTRUSTED USER INPUT)
-Title: \"\"\"{title}\"\"\"
-Submitted description:
-\"\"\"{body}\"\"\"
-
-### Output Instructions
-- Follow the evaluation criteria in the system prompt.
-- missing_items lists key information that is actually missing
-  (e.g. "missing env info", "missing error logs", "missing repro steps").
-- suggestions must be specific and actionable; do NOT use "required/must" language.
-- If screenshots/images are provided in the description, treat them as
-  having provided log-related information; do not ask for logs or convert to text.
-- Do not mention 910/910B in hardware examples; use A5/A5 exclusively.
-
-{JSON_FORMAT_INSTRUCTIONS}"""
-
-
-def load_template(kind: str, prefix: str) -> str:
-    if kind == "pr":
-        return load_pr_template()
-    return load_issue_template(prefix)
-
-
 def process_row(row: dict, kind: str, system_prompt: str) -> dict:
     title = row.get("title", "")
     body = row.get("body", "")
-    prefix = row.get("prefix", "") or (extract_issue_type(title) or "[Misc]")
-    type_key = PREFIX_TO_TYPE_KEY.get(prefix, "other")
-    template_text = load_template(kind, prefix)
-    user_prompt = build_user_prompt(title, body, template_text, type_key, kind)
-    raw_output = call_llm(system_prompt, user_prompt)
-    try:
-        parsed = validate_result(parse_json_output(raw_output))
-    except (json.JSONDecodeError, ValueError):
-        parsed = {"ok": False, "score": 0}
-    return {"raw_output": raw_output, "expected_ok": parsed["ok"], "score": parsed["score"]}
+    outcome = review(title, body, kind, system_prompt)
+    raw_output = outcome["raw_output"]
+    result = outcome["result"]
+    if not is_output_valid(raw_output):
+        print(f"  WARN: could not parse LLM output, raw: {raw_output[:200]!r}")
+    return {"raw_output": raw_output, "expected_ok": result["ok"], "score": result["score"]}
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Test issues/PRs CSV with LLM (same pipeline as GitHub Actions)"
+    parser = argparse.ArgumentParser(description="Test issues/PRs CSV with LLM (same pipeline as GitHub Actions)")
+    parser.add_argument(
+        "--mode",
+        default="issue",
+        choices=["issue", "pr", "issue_judge", "pr_judge"],
+        help="Test mode: issue, pr, issue_judge, pr_judge",
     )
-    parser.add_argument("--mode", default="issue",
-                        choices=["issue", "pr", "issue_judge", "pr_judge"],
-                        help="Test mode: issue, pr, issue_judge, pr_judge")
     parser.add_argument("--input", default=None, help="Input CSV file")
     parser.add_argument("--output", default=None, help="Output CSV file (defaults to same as input)")
     parser.add_argument("--start", type=int, default=0, help="Start index (0-based)")
     parser.add_argument("--limit", type=int, default=0, help="Max rows to process (0 = all)")
-    parser.add_argument("--skip-existing", action="store_true", default=True,
-                        help="Skip rows that already have results")
-    parser.add_argument("--retry-errors", action="store_true", default=False,
-                        help="Re-evaluate/judge rows with malformed or error outputs")
+    parser.add_argument(
+        "--skip-existing", action="store_true", default=True, help="Skip rows that already have results"
+    )
+    parser.add_argument(
+        "--retry-errors",
+        action="store_true",
+        default=False,
+        help="Re-evaluate/judge rows with malformed or error outputs",
+    )
     args = parser.parse_args()
 
     is_judge = args.mode in ("issue_judge", "pr_judge")
@@ -290,8 +201,7 @@ def main() -> None:
             idx = fieldnames.index("expected_ok_dsv4")
             fieldnames.insert(idx, "deepseek_v4_flash_output")
     else:
-        for col in ["judge_raw_output", "ok_reasonable", "reasoning_valid",
-                     "suggestions_valid", "judge_reasoning"]:
+        for col in ["judge_raw_output", "ok_reasonable", "reasoning_valid", "suggestions_valid", "judge_reasoning"]:
             if col not in fieldnames:
                 fieldnames.append(col)
 
@@ -317,6 +227,13 @@ def main() -> None:
         title = row.get("title", "")
         print(f"\n[{i + 1}/{total}] #{num}: {title[:80]}...")
 
+        # Mirror the production workflow filter: only titles that the bot would
+        # actually review are processed, so the harness stays in lock-step.
+        if not should_review(kind, title):
+            print("  SKIP (title not eligible for review, matches production filter)")
+            skipped += 1
+            continue
+
         if is_judge:
             existing_judge = (row.get("judge_reasoning") or "").strip()
             existing_output = (row.get("deepseek_v4_flash_output") or "").strip()
@@ -324,21 +241,21 @@ def main() -> None:
 
             if args.skip_existing and existing_judge:
                 if args.retry_errors and existing_ok_r == "error":
-                    print(f"  RETRY (prev judge had error, re-judging)")
+                    print("  RETRY (prev judge had error, re-judging)")
                     row["judge_reasoning"] = ""
                     row["ok_reasonable"] = ""
                 else:
-                    print(f"  SKIP (already judged)")
+                    print("  SKIP (already judged)")
                     skipped += 1
                     continue
 
             if not existing_output:
-                print(f"  SKIP (no evaluation to judge)")
+                print("  SKIP (no evaluation to judge)")
                 skipped += 1
                 continue
 
             if args.skip_existing and existing_output and not is_output_valid(existing_output):
-                print(f"  SKIP (eval output still malformed, needs re-evaluation first)")
+                print("  SKIP (eval output still malformed, needs re-evaluation first)")
                 skipped += 1
                 continue
 
@@ -350,9 +267,11 @@ def main() -> None:
                 row["suggestions_valid"] = result["suggestions_valid"]
                 row["judge_reasoning"] = result["judge_reasoning"]
                 success += 1
-                print(f"  JUDGED: ok_reasonable={result['ok_reasonable']} "
-                      f"reasoning_valid={result['reasoning_valid']} "
-                      f"suggestions_valid={result['suggestions_valid']}")
+                print(
+                    f"  JUDGED: ok_reasonable={result['ok_reasonable']} "
+                    f"reasoning_valid={result['reasoning_valid']} "
+                    f"suggestions_valid={result['suggestions_valid']}"
+                )
             except Exception as e:
                 row["judge_reasoning"] = f"ERROR: {e}"
                 failed += 1
@@ -363,7 +282,7 @@ def main() -> None:
 
             if args.skip_existing and existing_val:
                 if args.retry_errors and existing_output and not is_output_valid(existing_output):
-                    print(f"  RETRY (output malformed, re-evaluating)")
+                    print("  RETRY (output malformed, re-evaluating)")
                     row["expected_ok_dsv4"] = ""
                     row["judge_reasoning"] = ""
                     row["ok_reasonable"] = ""
@@ -374,7 +293,7 @@ def main() -> None:
 
             if args.skip_existing and existing_output and not existing_val:
                 if args.retry_errors and not is_output_valid(existing_output):
-                    print(f"  RETRY (output malformed, re-evaluating)")
+                    print("  RETRY (output malformed, re-evaluating)")
                 else:
                     try:
                         parsed = validate_result(parse_json_output(existing_output))
@@ -382,7 +301,7 @@ def main() -> None:
                         print(f"  PARSED from existing output: ok={parsed['ok']} score={parsed['score']}")
                         success += 1
                     except (json.JSONDecodeError, ValueError):
-                        print(f"  Could not parse existing output, will call LLM")
+                        print("  Could not parse existing output, will call LLM")
                     else:
                         continue
 
