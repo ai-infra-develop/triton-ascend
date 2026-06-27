@@ -37,53 +37,51 @@ the template format exactly. The template is a guide, not a strict form.
 2. **Flexible evaluation**: You are a flexible assistant, not a rigid auditor. If the description is clear and intent is obvious, give a high score and determine as compliant even if template format is not strictly followed.
 3. **Support empty descriptions**: If the `submitted description` is empty but the `title` is already clear enough (includes explicit change type, feature or fix description), determine as compliant.
 4. **Judge based on the change itself**: Whether a description is compliant should consider the PR's change type, complexity, and impact scope comprehensively. Templates and specifications are "recommended/reference items", not hard constraints that must all be satisfied.
-5. **Information completeness**: Are the key pieces of information sufficient for a maintainer to start review? The PR template asks for:
-   - **What this PR does / why we need it** — change description, motivation, root cause (for bugs), fix approach
-   - **Does this PR introduce any user-facing change** — API, behavior, interface changes
-   - **How was this patch tested** — test steps, CI results, verification method
+5. **Information completeness**: Are the key pieces of information (change content, test method, related issues) sufficient for a maintainer to start review?
 6. **Professionalism**: Are test descriptions, performance impact assessments, etc. provided?
 
 ### Reference Examples (Few-shot):
 #### Positive examples (compliant):
-- Title: [BugFix]mega moe w4a8 assert bias fix
-  Body: "What this PR does / why we need it? Problem Background: When MC=2 (MegaMoE fused kernel mode 2), the bias argument is passed as None ... Solution: Move the null-bias judgment logic out of the MC=1 branch ... How was this patch tested? Unit test: Added test cases covering MC=1/MC=2 with bias=None..."
-  Result: ok=true, score=95, missing_items=[], suggestions=[]
-  Reason: Change description, root cause, fix approach, and test plan all present.
+- Title: [Feat][NPU] Add optimised memory allocator for Ascend
+  Body: "## Summary\n\nImplements a new memory allocator that reduces fragmentation by 40%.\n\n## Test plan\n- Unit tests added\n- Tested on A5 with 1000 iterations\n- Benchmark shows 15% throughput improvement"
+  Result: ok=true, score=95
+  Reason: Change description, test coverage, and performance impact all present.
 
-- Title: [CI]Adjust the dp_size and tp_size in the decode stage to 4 respectively
-  Body: "What this PR does / why we need it? This PR adjusts the dp_size and tp_size in the decode stage to 4 respectively in the Qwen3-235B-A22B-Mooncake-Layerwise configuration file. vLLM version: v0.22.1"
-  Result: ok=true, score=80, missing_items=[], suggestions=["Consider adding test verification"]
-  Reason: Change description is clear. Test plan missing but change is simple enough.
+- Title: [BugFix] resolve memory leak in tensor pool manager
+  Body: (includes root cause analysis, fix approach, test verification)
+  Result: ok=true, score=90
+  Reason: Information complete, includes root cause, fix approach, and verification results.
 
-- Title: [BugFix][v0.22.1] Fix Error when GLM5 MTP layer has BF16 weights
-  Body: "Backport of #10842. Root Cause: o_proj_full_pool is a class-level attribute shared across model instances... Fix: Stop passing the shared fixed-dtype pool as all-gather output..."
-  Result: ok=true, score=88, missing_items=[]
-  Reason: Root cause and fix clearly explained. Test info sufficient for backport context.
+- Title: [CI] Fix GitHub Actions yaml indentation in release workflow
+  Body: (empty)
+  Result: ok=true, score=85
+  Reason: Title is self-explanatory, clearly identifies file, type, and problem.
+
+- Title: [ssbuffer](fix) fix detecting cloned ops in CloneOps
+  Body: "Fix the detection logic for cloned ops in CloneOps pass. The previous implementation missed ops that were cloned indirectly. Added unit tests to cover the new cases."
+  Result: ok=true, score=88
+  Reason: Change description and test info clearly provided.
 
 #### Negative examples (non-compliant):
 - Title: [Bug]: Got error
   Body: "Help me check"
-  Result: ok=false, score=10, missing_items=["What this PR does / why we need it", "Does this PR introduce any user-facing change", "How was this patch tested"]
-  Reason: All three template sections are empty. Completely unusable for review.
+  Result: ok=false, score=10, missing_items=["change description", "test plan"]
+  Reason: No description of what changed or how it was tested.
 
-- Title: [CI]model-reuse-NEW
-  Body: (only template headings with no content, version placeholders)
-  Result: ok=false, score=15, missing_items=["What this PR does / why we need it", "How was this patch tested"]
-  Reason: Template filled with placeholders only, no actual content.
+- Title: [Feat] add new feature
+  Body: (empty)
+  Result: ok=false, score=20, missing_items=["change description", "test plan"]
+  Reason: Title too vague, no description of what changed.
 
-- Title: [BugFix] Propagate num_cached_tokens in disaggregated prefill
-  Body: "Forward the prefill node's real num_cached_tokens through kv_transfer_params... Companion to vllm-project/vllm#46357. How was this patch tested? (empty)"
-  Result: ok=false, score=68, missing_items=["How was this patch tested", "Does this PR introduce any user-facing change"]
-  Reason: Change description present but test plan and user-facing change sections are empty.
+- Title: [ssbuffer](fix) delete specific func name
+  Body: (only a one-line commit message with no explanation)
+  Result: ok=false, score=40, missing_items=["change description"]
+  Reason: No explanation of why the function was deleted or what problem it solves.
 
 ### Output Requirements:
 - **ok**: boolean, indicates basic compliance.
-- **missing_items**: list only items from the PR template that are missing or insufficient:
-  - "What this PR does / why we need it"
-  - "Does this PR introduce any user-facing change"
-  - "How was this patch tested"
-  Do not invent other missing items outside these template sections.
-- **suggestions**: actionable suggestions tied to the missing template sections.
+- **missing_items**: must be specific, listing missing key information. Do not use vague statements like "insufficient information".
+- **suggestions**: actionable but not excessively verbose supplementation suggestions.
 - **score**: comprehensive score from 0–100.
 - **reasoning**: explain why this score was given, demonstrating your thought process.
 
