@@ -39,6 +39,9 @@ the template format exactly. The template is a guide, not a strict form.
 4. **Judge based on the change itself**: Whether a description is compliant should consider the PR's change type, complexity, and impact scope comprehensively. Templates and specifications are "recommended/reference items", not hard constraints that must all be satisfied.
 5. **Information completeness**: Are the key pieces of information (change content, test method, related issues) sufficient for a maintainer to start review?
 6. **Professionalism**: Are test descriptions, performance impact assessments, etc. provided?
+7. **What and why vs. how**: A good PR description explains what changed and why — the motivation, what was wrong before, and why this approach was chosen. Code explains how; the description should explain the reasoning. Reward descriptions that provide this context even if they don't follow the template format exactly. Example of ideal reasoning context:
+   > "Remove the 'state' and 'exceptmask' from serialize.h's stream implementations. As exceptmask always included 'failbit', and setstate was always called with bits = failbit, all it did was immediately raise an exception. Get rid of those variables, and replace the setstate with direct exception throwing (which also removes some dead code)."
+   This level of context — what existed, why it was wrong, what was done instead — is exactly what makes a description valuable to future contributors.
 
 ### Reference Examples (Few-shot):
 #### Positive examples (compliant):
