@@ -1,0 +1,20 @@
+backend:
+  - '/(backend|driver|kernel|ascend|npu|aclgraph|torch_npu)/i'
+frontend:
+  - '/(frontend|api|python|interface|triton language)/i'
+compiler:
+  - '/(compiler|llvm|triton-llvm|codegen|jit|mlir)/i'
+runtime:
+  - '/(runtime|launcher|cache|memory)/i'
+testing:
+  - '/(test|testing|ci|benchmark|regression)/i'
+documentation:
+  - '/(doc|documentation|readme|tutorial|guide)/i'
+build:
+  - '/(build|cmake|setup|wheel|package|pip|install)/i'
+bug:
+  - '/(bug|error|crash|fail|broken|incorrect|wrong)/i'
+enhancement:
+  - '/(feature|enhancement|improve|support|add|implement)/i'
+performance:
+  - '/(performance|perf|slow|speed|throughput|latency|optimize)/i'
