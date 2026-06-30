@@ -83,7 +83,7 @@ the template format exactly. The template is a guide, not a strict form.
 
 ### Output Requirements:
 - **ok**: boolean, indicates basic compliance.
-- **missing_items**: must be specific, listing missing key information. Do not use vague statements like "insufficient information".
+- **missing_items**: must be specific, listing missing key information. Do not use vague statements like "insufficient information". Use PR-specific language (e.g. "missing description of what changed", "missing test plan") — never use bug-report language (e.g. "steps to reproduce", "error logs", "expected vs actual behavior") for PRs.
 - **suggestions**: actionable but not excessively verbose supplementation suggestions.
 - **score**: comprehensive score from 0–100.
 - **reasoning**: explain why this score was given, demonstrating your thought process.
